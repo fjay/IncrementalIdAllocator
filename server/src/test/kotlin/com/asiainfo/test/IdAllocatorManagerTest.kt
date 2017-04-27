@@ -12,6 +12,7 @@ class IdAllocatorManagerTest {
     @Test
     fun alloc() {
         ApplicationContext.initialize()
+        Thread.sleep(1000)
         println(IdAllocatorManager.alloc(1))
     }
 }

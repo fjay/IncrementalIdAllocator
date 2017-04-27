@@ -61,7 +61,7 @@ object IdAllocatorServer : Closeable {
                     router.doRoute(context);
                 }.listen(ApplicationContext.currentServerNode.port);
 
-        startRuntimeMonitor()
+//        startRuntimeMonitor()
     }
 
     override fun close() {

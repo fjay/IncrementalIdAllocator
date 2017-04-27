@@ -25,12 +25,6 @@
             <version>1.1.7</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.31</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.hyd</groupId>

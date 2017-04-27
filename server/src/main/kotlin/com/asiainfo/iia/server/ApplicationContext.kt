@@ -74,8 +74,9 @@ object ApplicationContext : ServiceProvider() {
 
         zkClient = CuratorFrameworkFactory.builder()
                 .connectString(DbConfig.get().zkNode.value())
+                .connectionTimeoutMs(2000)
                 .sessionTimeoutMs(3000)
-                .retryPolicy(ExponentialBackoffRetry(3000, Int.MAX_VALUE))
+                .retryPolicy(ExponentialBackoffRetry(3000, 10))
                 .namespace(Constant.APPLICATION_ID)
                 .build()
 

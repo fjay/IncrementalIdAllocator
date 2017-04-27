@@ -1,5 +1,6 @@
 package com.asiainfo.iia.common;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.asiainfo.common.util.MapUtil;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.concurrent.Callable;
  */
 public class ServerNodeRoute implements Serializable {
 
+    @JSONField(serialize = false)
     private transient Map<Integer, String> keyAndServerNodes = new HashMap<Integer, String>();
 
     private Map<String, Set<Integer>> serverNodeAndKeys = new HashMap<String, Set<Integer>>();

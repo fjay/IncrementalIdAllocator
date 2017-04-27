@@ -15,7 +15,7 @@ import org.team4u.fhs.web.handler.method.annotation.ResponseView
  *
  * @author Jay Wu
  */
-@Controller("/nodeId")
+@Controller("/id")
 class IdAllocatorController {
 
     private val log = Logs.get()
@@ -26,7 +26,6 @@ class IdAllocatorController {
     @ResponseView(success = "json")
     fun alloc(@RequestParam("key") key: Int?, @RequestParam("version") version: String?): Map<String, Any?> {
         ApplicationErrorCode.ILLEGAL_PARAM.isNotEmpty(key, "key")
-        ApplicationErrorCode.ILLEGAL_PARAM.isNotEmpty(key, "version")
 
         val id = IdAllocatorManager.alloc(key!!)
         val serverNodeRoute = if (serverNodeRouter.serverNodeRoute.version != version) {

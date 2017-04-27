@@ -22,7 +22,8 @@ class ServerTest {
     fun alloc() {
         val response = HttpRequester.create()
                 .setUrl("http://127.0.0.1:7000/id/alloc")
-                .putUrlParam("key", "1")
+                .putUrlParam("key", "2")
+                .putUrlParam("version", "9494E35D9467930D9134B9F1A43D6622")
                 .get()
 
         println(response.code)

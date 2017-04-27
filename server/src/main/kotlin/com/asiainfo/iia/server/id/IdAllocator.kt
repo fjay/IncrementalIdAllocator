@@ -10,7 +10,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry
  */
 class IdAllocator(val id: Int, val poolSize: Int, client: CuratorFramework) : Registrar.Applicant<Int> {
 
-    private val counter = DistributedAtomicLong(client, "/id/$id", ExponentialBackoffRetry(-1, 0))
+    private val counter = DistributedAtomicLong(client, "/nodeId/$id", ExponentialBackoffRetry(-1, 0))
 
     private var currentSeq: Long = 1
     private var nextMaxSeq: Long = 0

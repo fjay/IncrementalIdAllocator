@@ -31,6 +31,7 @@ public class ServerNodeRoute implements Serializable {
     public ServerNodeRoute setServerNodeAndKeys(Map<String, Set<Integer>> serverNodeAndKeys) {
         this.serverNodeAndKeys = serverNodeAndKeys;
 
+        keyAndServerNodes.clear();
         for (Map.Entry<String, Set<Integer>> sk : serverNodeAndKeys.entrySet()) {
             for (Integer key : sk.getValue()) {
                 keyAndServerNodes.put(key, sk.getKey());
@@ -47,6 +48,7 @@ public class ServerNodeRoute implements Serializable {
     public ServerNodeRoute setKeyAndServerNodes(Map<Integer, String> keyAndServerNodes) {
         this.keyAndServerNodes = keyAndServerNodes;
 
+        serverNodeAndKeys.clear();
         for (Map.Entry<Integer, String> sk : keyAndServerNodes.entrySet()) {
             Set<Integer> keys = MapUtil.putIfAbsent(serverNodeAndKeys, sk.getValue(), new Callable<Set<Integer>>() {
                 @Override

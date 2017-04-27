@@ -85,12 +85,12 @@ object ApplicationContext : ServiceProvider() {
     }
 
     fun initCurrentServerNode() {
-        val item = DbConfig.get().serverNodes.find {
-            it.configItemId == LocalConfig.get().id
+        val item = DbConfig.get().iiaNodes.find {
+            it.configItemId == LocalConfig.get().nodeId
         }
 
         ApplicationErrorCode.ILLEGAL_PARAM.isNotEmpty(item,
-                "Can't find server node in db(id=${LocalConfig.get().id})")
+                "Can't find server node in db(nodeId=${LocalConfig.get().nodeId})")
 
         val (ip, port) = item!!.value.split(":")
         currentServerNode = ServerNode(item.configItemId, ip, port.toInt())

@@ -8,7 +8,7 @@ import com.asiainfo.common.util.config.Configurable
  */
 class LocalConfig : Configurable {
 
-    lateinit var id: String
+    lateinit var nodeId: String
 
     lateinit var dataSource: DataSource
 

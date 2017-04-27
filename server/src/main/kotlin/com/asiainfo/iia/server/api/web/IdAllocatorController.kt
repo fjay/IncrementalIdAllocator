@@ -15,7 +15,7 @@ import org.team4u.fhs.web.handler.method.annotation.ResponseView
  *
  * @author Jay Wu
  */
-@Controller("/id")
+@Controller("/nodeId")
 class IdAllocatorController {
 
     private val log = Logs.get()
@@ -36,7 +36,7 @@ class IdAllocatorController {
         }
 
         return mapOf<String, Any?>(
-                "id" to id,
+                "nodeId" to id,
                 "serverNodeRoute" to serverNodeRoute
         )
     }

@@ -14,16 +14,14 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
 
     var online = true
 
-    private val serverNodeRouter = ApplicationContext.get(ServerNodeRouter::class.java)
-
     fun register(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
-        val oldKeys = oldOne.serverNodeAndKeys[ApplicationContext.currentServerNode.id] ?: Collections.emptySet<Int>()
-        val newKeys = newOne.serverNodeAndKeys[ApplicationContext.currentServerNode.id] ?: Collections.emptySet<Int>()
+        val oldKeys = oldOne.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
+        val newKeys = newOne.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
 
         val addKeys = newKeys - oldKeys
         addKeys.forEach {
             register(IdAllocator(it,
-                    DbConfig.get().IdAllocatorPoolSize.value.toInt(),
+                    DbConfig.get().idAllocatorPoolSize.value.toInt(),
                     ApplicationContext.zkClient))
         }
 
@@ -34,7 +32,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     }
 
     fun accept(key: Int): Boolean {
-        return online && serverNodeRouter.serverNodeRoute.getServerNode(key) ==
+        return online && ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
                 ApplicationContext.currentServerNode.ipAndPort()
     }
 

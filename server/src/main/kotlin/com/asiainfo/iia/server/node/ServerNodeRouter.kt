@@ -19,16 +19,17 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
  */
 class ServerNodeRouter {
 
-    val nodeChangedListener: PathChildrenCacheListener = NodeChangedListener()
-
     private val log = Logs.get()
+
+    private val nodeChangedListener: PathChildrenCacheListener = NodeChangedListener()
 
     private val onlineServerNodeManager = ApplicationContext.get(OnlineServerNodeManager::class.java)
 
-    lateinit var serverNodeRoute: ServerNodeRoute
+    var serverNodeRoute: ServerNodeRoute = ServerNodeRoute()
         get
 
     init {
+        onlineServerNodeManager.registerAndWatch(ApplicationContext.currentServerNode, nodeChangedListener)
         onServerNodeChanged()
     }
 
@@ -37,7 +38,7 @@ class ServerNodeRouter {
 
         serverNodeRoute = doRoute(
                 onlineServerNodeManager.loadOnlineServerNodes(),
-                DbConfig.get().maxServerNodeSize.value.toInt()
+                DbConfig.get().maxIiaNodeSize.value.toInt()
         )
 
         IdAllocatorManager.register(oldServerNodeRoute, serverNodeRoute)

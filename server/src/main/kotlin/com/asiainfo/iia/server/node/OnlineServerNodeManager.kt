@@ -18,10 +18,9 @@ class OnlineServerNodeManager(val client: CuratorFramework) {
 
     private val watcher = PathChildrenCache(client, ONLINE_SERVER_NODE_PATH, false)
 
-
     fun registerAndWatch(node: ServerNode, listener: PathChildrenCacheListener) {
         // 完整路径为 /namespace/path/node:seq 例如: /IIA/onlineServerNodes/IIA_0:127.0.0.1:7000:0000000001
-        val nodePath = "$ONLINE_SERVER_NODE_PATH/$node"
+        val nodePath = "$ONLINE_SERVER_NODE_PATH/$node:"
 
         client.create()
                 .creatingParentsIfNeeded()

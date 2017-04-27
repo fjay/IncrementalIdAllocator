@@ -25,6 +25,7 @@ class ServerTest {
                 .putUrlParam("key", "1")
                 .get()
 
+        println(response.code)
         println(response.content)
     }
 }

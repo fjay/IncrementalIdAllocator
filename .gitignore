@@ -1,0 +1,10 @@
+/bin
+/*.classpath
+/*.project
+/tmp/
+/.settings/
+*.DS_Store
+/target
+/.idea/
+*.iml
+/.kobalt/

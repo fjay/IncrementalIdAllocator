@@ -31,21 +31,17 @@ object IdAllocatorServer : Closeable {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        start()
-    }
-
-    fun start() {
-        try {
-            PropertyConfigurator.configureAndWatch(FileUtil.findFile("log4j.properties").absolutePath, 1000)
-        } catch (e: Exception) {
-            log.errorf("Log4j watch properties file failed, %s", e.message)
-        }
-
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 close()
             }
         })
+
+        start()
+    }
+
+    fun start() {
+        PropertyConfigurator.configureAndWatch(FileUtil.findFile("log4j.properties").absolutePath, 1000)
 
         ApplicationContext.initialize()
 

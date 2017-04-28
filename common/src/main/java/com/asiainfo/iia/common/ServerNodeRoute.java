@@ -22,6 +22,8 @@ public class ServerNodeRoute implements Serializable {
 
     private String version;
 
+    private int maxNodeSize;
+
     public String getServerNode(Integer key) {
         return keyAndServerNodes.get(key);
     }
@@ -71,6 +73,15 @@ public class ServerNodeRoute implements Serializable {
 
     public ServerNodeRoute setVersion(String version) {
         this.version = version;
+        return this;
+    }
+
+    public int getMaxNodeSize() {
+        return maxNodeSize;
+    }
+
+    public ServerNodeRoute setMaxNodeSize(int maxNodeSize) {
+        this.maxNodeSize = maxNodeSize;
         return this;
     }
 }

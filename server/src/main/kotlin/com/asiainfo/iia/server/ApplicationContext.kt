@@ -25,8 +25,6 @@ object ApplicationContext : ServiceProvider() {
 
     lateinit var currentServerNode: ServerNode
 
-    lateinit var zkClient: CuratorFramework
-
     fun initialize() {
         initDao()
         initCurrentServerNode()
@@ -68,21 +66,26 @@ object ApplicationContext : ServiceProvider() {
     }
 
     fun initZKClient() {
-        log.info(LogMessage("Init", "initZKClient")
-                .processing()
-                .append("host", DbConfig.get().zkNode.value()))
+        register(CuratorFramework::class.java, object : ServiceProvider.Factory<CuratorFramework>() {
+            override fun create(): CuratorFramework {
+                log.info(LogMessage("Init", "initZKClient")
+                        .processing()
+                        .append("host", DbConfig.get().zkNode.value()))
 
-        zkClient = CuratorFrameworkFactory.builder()
-                .connectString(DbConfig.get().zkNode.value())
-                .connectionTimeoutMs(2000)
-                .sessionTimeoutMs(3000)
-                .retryPolicy(ExponentialBackoffRetry(3000, 10))
-                .namespace(Constant.APPLICATION_ID)
-                .build()
+                val zkClient = CuratorFrameworkFactory.builder()
+                        .connectString(DbConfig.get().zkNode.value())
+                        .connectionTimeoutMs(2000)
+                        .sessionTimeoutMs(3000)
+                        .retryPolicy(ExponentialBackoffRetry(3000, 10))
+                        .namespace(Constant.APPLICATION_ID)
+                        .build()
 
-        zkClient.start()
+                zkClient.start()
 
-        log.info(LogMessage("Init", "initZKClient").success())
+                log.info(LogMessage("Init", "initZKClient").success())
+                return zkClient
+            }
+        })
     }
 
     fun initCurrentServerNode() {
@@ -98,7 +101,7 @@ object ApplicationContext : ServiceProvider() {
     }
 
     fun initManager() {
-        register(OnlineServerNodeManager(zkClient))
+        register(OnlineServerNodeManager(get(CuratorFramework::class.java)))
         register(ServerNodeRouter())
     }
 }

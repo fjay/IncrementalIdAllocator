@@ -1,16 +1,20 @@
 package com.asiainfo.iia.server.id
 
 import com.asiainfo.common.util.Registrar
+import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.common.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.DbConfig
 import com.asiainfo.iia.server.node.ServerNodeRouter
+import org.apache.curator.framework.CuratorFramework
 import java.util.*
 
 /**
  * @author Jay Wu
  */
 object IdAllocatorManager : Registrar<Int, IdAllocator>() {
+
+    private val log = Logs.get()
 
     var online = true
 
@@ -22,7 +26,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
         addKeys.forEach {
             register(IdAllocator(it,
                     DbConfig.get().idAllocatorPoolSize.value.toInt(),
-                    ApplicationContext.zkClient))
+                    ApplicationContext.get(CuratorFramework::class.java)))
         }
 
         val removeKeys = oldKeys - newKeys

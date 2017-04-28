@@ -31,13 +31,13 @@ class ServerNodeRouter {
         onServerNodeChanged()
     }
 
-    fun buildRoute(nodes: List<ServerNode>, maxNodeSize: Int): ServerNodeRoute {
+    fun buildRoute(nodes: List<ServerNode>, maxSegmentSize: Int): ServerNodeRoute {
         val policy = ConsistentHashPolicy(nodes.map {
             ConsistentHashPolicy.PhysicalNode(Constant.APPLICATION_ID, it.ip, it.port)
-        }, maxNodeSize)
+        }, maxSegmentSize)
 
         val keyAndServerNodes = HashMap<Int, String>()
-        (0..maxNodeSize - 1).forEach {
+        (0..maxSegmentSize - 1).forEach {
             val node = policy.getNode(it.toString())
             keyAndServerNodes[it] = node.ip + ":" + node.port
         }

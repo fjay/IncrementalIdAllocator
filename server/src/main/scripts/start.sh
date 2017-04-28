@@ -2,6 +2,6 @@
 
 cd `dirname $0`
 
-nohup java -Dfile.encoding=UTF-8 -jar db-executor-server-*.jar &
+nohup java -Dfile.encoding=UTF-8 -jar incremental-id-allocator-server-*.jar &
 
 cd -

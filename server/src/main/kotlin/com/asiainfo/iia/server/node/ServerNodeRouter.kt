@@ -31,21 +31,6 @@ class ServerNodeRouter {
         onServerNodeChanged()
     }
 
-    fun onServerNodeChanged() {
-        val oldServerNodeRoute = serverNodeRoute;
-
-        serverNodeRoute = buildRoute(
-                onlineServerNodeManager.loadOnlineServerNodes(),
-                DbConfig.get().maxSegmentSize.value.toInt()
-        )
-
-        IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)
-
-        log.info(LogMessage("ServerNodeRouter", "onServerNodeChanged")
-                .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys)
-                .success())
-    }
-
     fun buildRoute(nodes: List<ServerNode>, maxNodeSize: Int): ServerNodeRoute {
         val policy = ConsistentHashPolicy(nodes.map {
             ConsistentHashPolicy.PhysicalNode(Constant.APPLICATION_ID, it.ip, it.port)
@@ -68,6 +53,21 @@ class ServerNodeRouter {
         return EncryptUtil.encryptWithMD5(nodes.map {
             it.toString()
         }.joinToString(","))
+    }
+
+    private fun onServerNodeChanged() {
+        val oldServerNodeRoute = serverNodeRoute;
+
+        serverNodeRoute = buildRoute(
+                onlineServerNodeManager.loadOnlineServerNodes(),
+                DbConfig.get().maxSegmentSize.value.toInt()
+        )
+
+        IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)
+
+        log.info(LogMessage("ServerNodeRouter", "onServerNodeChanged")
+                .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys)
+                .success())
     }
 
     private inner class NodeChangedListener : PathChildrenCacheListener {

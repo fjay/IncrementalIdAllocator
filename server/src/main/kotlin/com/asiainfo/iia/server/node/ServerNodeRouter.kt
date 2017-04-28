@@ -27,7 +27,10 @@ class ServerNodeRouter {
     private val onlineServerNodeManager = ApplicationContext.get(OnlineServerNodeManager::class.java)
 
     init {
-        onlineServerNodeManager.registerAndWatch(ApplicationContext.currentServerNode, NodeChangedListener())
+        onlineServerNodeManager.registerAndWatch(
+                ApplicationContext.currentServerNode,
+                OnlinePathChildrenChangedListener()
+        )
         onServerNodeChanged()
     }
 
@@ -70,7 +73,7 @@ class ServerNodeRouter {
                 .success())
     }
 
-    private inner class NodeChangedListener : PathChildrenCacheListener {
+    private inner class OnlinePathChildrenChangedListener : PathChildrenCacheListener {
         override fun childEvent(client: CuratorFramework, event: PathChildrenCacheEvent) {
             log.info(LogMessage("NodeChangedListener", "changed").append("event", event).success())
 

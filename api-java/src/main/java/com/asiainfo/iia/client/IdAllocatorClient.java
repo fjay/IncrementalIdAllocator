@@ -45,6 +45,15 @@ public class IdAllocatorClient {
         }
     }
 
+    public List<String> getHosts() {
+        return hosts;
+    }
+
+    public IdAllocatorClient setHosts(List<String> hosts) {
+        this.hosts = hosts;
+        return this;
+    }
+
     private Long tryAllocOnce(String key) {
         int intKey = Math.abs(key.hashCode()) % route.getMaxNodeSize();
         String host = route.getServerNode(intKey);
@@ -59,6 +68,10 @@ public class IdAllocatorClient {
         if (allocResponse != null) {
             if (allocResponse.getRoute() != null) {
                 route = allocResponse.getRoute();
+
+                log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")
+                        .append("nodes", route.getServerNodeAndKeys().keySet())
+                        .success());
             }
 
             return allocResponse.getId();
@@ -89,15 +102,6 @@ public class IdAllocatorClient {
                 }
             }
         });
-    }
-
-    public List<String> getHosts() {
-        return hosts;
-    }
-
-    public IdAllocatorClient setHosts(List<String> hosts) {
-        this.hosts = hosts;
-        return this;
     }
 
     private <T> T handleResponse(Response response, Class<T> clazz) {

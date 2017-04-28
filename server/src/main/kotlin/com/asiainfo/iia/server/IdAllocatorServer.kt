@@ -40,7 +40,7 @@ object IdAllocatorServer : Closeable {
                     .append("node", ApplicationContext.currentServerNode)
                     .success())
         } catch (e: Throwable) {
-            log.info(logMessage.fail())
+            log.error(logMessage.fail(e.message), e)
             System.exit(1)
         }
     }

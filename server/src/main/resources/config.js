@@ -1,5 +1,5 @@
 var conf = {
-    nodeId: "IIA_1",
+    nodeId: "IIA_0",
     // 数据库配置
     dataSource: {
         url: '${database.url}',

@@ -33,7 +33,7 @@ public class IdAllocatorClient {
 
     public Long alloc(String key) {
         try {
-            return tryOnce(key);
+            return tryAllocOnce(key);
         } catch (Exception e) {
             log.debug(new LogMessage("IdAllocatorClient", "firstAlloc")
                     .append("key", key)
@@ -41,11 +41,11 @@ public class IdAllocatorClient {
 
             ThreadUtil.safeSleep(3500);
             initServerNodeRoute();
-            return tryOnce(key);
+            return tryAllocOnce(key);
         }
     }
 
-    private Long tryOnce(String key) {
+    private Long tryAllocOnce(String key) {
         int intKey = Math.abs(key.hashCode()) % route.getMaxNodeSize();
         String host = route.getServerNode(intKey);
         Response response = HttpRequester.create()

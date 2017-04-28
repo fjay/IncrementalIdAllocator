@@ -23,10 +23,12 @@ IncrementalIdAllocator为轻量级的分布式ID生成器，包含以下特点�
 使用代码示例：
 
 ```java
+// 传入所有节点服务器
 IdAllocatorClient client = new IdAllocatorClient(CollectionUtil.arrayListOf(
             "127.0.0.1:7001", "127.0.0.1:7000"
     ));
 
+// 传入分类标识
 Long id = client.alloc("bizType1")
 ```
 

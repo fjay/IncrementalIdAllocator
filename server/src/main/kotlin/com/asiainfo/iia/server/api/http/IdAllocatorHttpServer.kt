@@ -1,4 +1,4 @@
-package com.asiainfo.iia.server.api.web
+package com.asiainfo.iia.server.api.http
 
 import com.asiainfo.common.util.IoUtil
 import org.team4u.fhs.server.HttpServer

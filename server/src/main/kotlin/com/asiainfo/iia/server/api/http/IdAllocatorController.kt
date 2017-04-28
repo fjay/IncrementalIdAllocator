@@ -1,4 +1,4 @@
-package com.asiainfo.iia.server.api.web;
+package com.asiainfo.iia.server.api.http;
 
 import com.asiainfo.common.kotlin.extension.isNotEmpty
 import com.asiainfo.common.util.log.LogMessage

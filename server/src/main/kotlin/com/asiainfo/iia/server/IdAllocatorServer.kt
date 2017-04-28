@@ -5,7 +5,7 @@ import com.asiainfo.common.util.IoUtil
 import com.asiainfo.common.util.TimerUtil
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
-import com.asiainfo.iia.server.api.web.IdAllocatorHttpServer
+import com.asiainfo.iia.server.api.http.IdAllocatorHttpServer
 import org.apache.log4j.PropertyConfigurator
 import java.io.Closeable
 

@@ -83,7 +83,7 @@ object ApplicationContext : ServiceProvider() {
                         .connectString(DbConfig.get().zkNode.value())
                         .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
                         .sessionTimeoutMs(nodeRefreshIntervalMs)
-                        .retryPolicy(ExponentialBackoffRetry(3000, 10))
+                        .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
                         .namespace(Constant.APPLICATION_ID)
                         .build()
 

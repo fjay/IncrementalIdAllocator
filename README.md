@@ -94,7 +94,7 @@ var conf = {
 执行以下命令：
 
 ```shell
-start.sh start
+sh start.sh start
 ```
 
 END

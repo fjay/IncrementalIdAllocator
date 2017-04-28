@@ -1,6 +1,7 @@
 package com.asiainfo.iia.server.id
 
 import com.asiainfo.common.util.Registrar
+import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.common.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
@@ -32,6 +33,13 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
         val removeKeys = oldKeys - newKeys
         removeKeys.forEach {
             unregister(it)
+        }
+
+        if (log.isDebugEnabled) {
+            log.debug(LogMessage("IdAllocatorManager", "register")
+                    .append("addKeys", addKeys)
+                    .append("removeKeys", removeKeys)
+                    .success())
         }
     }
 

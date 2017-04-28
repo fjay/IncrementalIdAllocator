@@ -20,6 +20,8 @@ class DbConfig {
 
     lateinit var idAllocatorPoolSize: ConfigItem
 
+    lateinit var nodeSessionTimeoutMs: ConfigItem
+
     companion object {
         private val client = InMemoryConfigItemLoader(
                 DbConfigItemLoader(Constant.APPLICATION_ID, "DEFAULT",

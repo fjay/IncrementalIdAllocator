@@ -22,7 +22,11 @@ public class ServerNodeRoute implements Serializable {
 
     private String version;
 
-    private int maxNodeSize;
+    private int nodeSessionTimeoutMs;
+
+    public int getMaxKeySize() {
+        return keyAndServerNodes.size();
+    }
 
     public String getServerNode(Integer key) {
         return keyAndServerNodes.get(key);
@@ -76,12 +80,12 @@ public class ServerNodeRoute implements Serializable {
         return this;
     }
 
-    public int getMaxNodeSize() {
-        return maxNodeSize;
+    public int getNodeSessionTimeoutMs() {
+        return nodeSessionTimeoutMs;
     }
 
-    public ServerNodeRoute setMaxNodeSize(int maxNodeSize) {
-        this.maxNodeSize = maxNodeSize;
+    public ServerNodeRoute setNodeSessionTimeoutMs(int nodeSessionTimeoutMs) {
+        this.nodeSessionTimeoutMs = nodeSessionTimeoutMs;
         return this;
     }
 }

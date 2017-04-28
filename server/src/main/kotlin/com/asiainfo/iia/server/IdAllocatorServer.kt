@@ -3,6 +3,7 @@ package com.asiainfo.iia.server
 import com.asiainfo.common.util.FileUtil
 import com.asiainfo.common.util.IoUtil
 import com.asiainfo.common.util.TimerUtil
+import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.server.api.web.IdAllocatorController
 import org.apache.log4j.PropertyConfigurator
@@ -41,6 +42,11 @@ object IdAllocatorServer : Closeable {
     }
 
     fun start() {
+        val logMessage = LogMessage("IdAllocatorServer", "start")
+                .processing()
+
+        log.info(logMessage)
+
         PropertyConfigurator.configureAndWatch(FileUtil.findFile("log4j.properties").absolutePath, 1000)
 
         ApplicationContext.initialize()
@@ -57,36 +63,18 @@ object IdAllocatorServer : Closeable {
                     router.doRoute(context);
                 }.listen(ApplicationContext.currentServerNode.port);
 
-//        startRuntimeMonitor()
+        log.info(logMessage
+                .append("node", ApplicationContext.currentServerNode)
+                .success())
     }
 
     override fun close() {
-        log.infof("IdAllocatorServer closing")
+        log.info(LogMessage("IdAllocatorServer", "close").processing())
 
         IoUtil.safeClose(server)
         TimerUtil.depose()
         ApplicationContext.close()
 
-        log.infof("IdAllocatorServer closed")
-    }
-
-    private fun startRuntimeMonitor() {
-        TimerUtil.scheduleAtFixedRate(30) {
-            val sb = StringBuffer()
-            sb.appendf("------------>Runtime Info<------------")
-
-
-            sb.appendf("<<end")
-            log.info(sb.toString())
-        }
-    }
-
-    private fun StringBuffer.appendf(value: String, vararg fmt: Any?): StringBuffer {
-        if (fmt.isNotEmpty()) {
-            append(String.format(value, *fmt) + "\n")
-        } else {
-            append(value + "\n")
-        }
-        return this
+        log.info(LogMessage("IdAllocatorServer", "close").success())
     }
 }

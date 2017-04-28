@@ -35,7 +35,11 @@ object ApplicationContext : ServiceProvider() {
     fun initDao() {
         register(DataSource::class.java, object : ServiceProvider.Factory<DataSource>() {
             override fun create(): DataSource {
-                log.info("initDao start(url=${LocalConfig.get().dataSource.url})")
+                val logMessage = LogMessage("ApplicationContext", "initDao")
+                        .append("url", LocalConfig.get().dataSource.url)
+                        .processing()
+
+                log.info(logMessage)
 
                 val dataSource = DruidDataSource().apply {
                     url = LocalConfig.get().dataSource.url
@@ -53,7 +57,7 @@ object ApplicationContext : ServiceProvider() {
                     timeBetweenEvictionRunsMillis = 30000
                 }
 
-                log.info("initDao completed")
+                log.info(logMessage.success())
                 return dataSource
             }
         })
@@ -68,21 +72,24 @@ object ApplicationContext : ServiceProvider() {
     fun initZKClient() {
         register(CuratorFramework::class.java, object : ServiceProvider.Factory<CuratorFramework>() {
             override fun create(): CuratorFramework {
-                log.info(LogMessage("Init", "initZKClient")
+                val logMessage = LogMessage("ApplicationContext", "initZKClient")
+                        .append("host", DbConfig.get().zkNode.value())
                         .processing()
-                        .append("host", DbConfig.get().zkNode.value()))
 
+                log.info(logMessage)
+
+                val nodeRefreshIntervalMs = DbConfig.get().nodeSessionTimeoutMs.value.toInt()
                 val zkClient = CuratorFrameworkFactory.builder()
                         .connectString(DbConfig.get().zkNode.value())
-                        .connectionTimeoutMs(2000)
-                        .sessionTimeoutMs(3000)
+                        .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
+                        .sessionTimeoutMs(nodeRefreshIntervalMs)
                         .retryPolicy(ExponentialBackoffRetry(3000, 10))
                         .namespace(Constant.APPLICATION_ID)
                         .build()
 
                 zkClient.start()
 
-                log.info(LogMessage("Init", "initZKClient").success())
+                log.info(logMessage.success())
                 return zkClient
             }
         })

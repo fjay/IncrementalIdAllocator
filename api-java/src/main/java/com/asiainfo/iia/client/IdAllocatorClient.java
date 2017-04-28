@@ -19,29 +19,36 @@ public class IdAllocatorClient {
 
     private Log log = Logs.get();
 
-    private List<String> hosts;
-
     private ServerNodeRoute route = new ServerNodeRoute();
-
     private RoundRobinPolicy<String> roundRobinPolicy = new RoundRobinPolicy<String>();
 
+    private List<String> hosts;
+    private int requestTimeoutMs;
+
     public IdAllocatorClient(List<String> hosts) {
+        this(hosts, 5000);
+    }
+
+    public IdAllocatorClient(List<String> hosts, int requestTimeoutMs) {
         this.hosts = hosts;
+        this.requestTimeoutMs = requestTimeoutMs;
 
         initServerNodeRoute();
     }
 
-    public Long alloc(String key) {
+    public Long alloc(String type) {
         try {
-            return tryAllocOnce(key);
+            return tryAllocOnce(type);
         } catch (Exception e) {
             log.debug(new LogMessage("IdAllocatorClient", "firstAlloc")
-                    .append("key", key)
+                    .append("type", type)
                     .fail());
 
-            ThreadUtil.safeSleep(3500);
+            ThreadUtil.safeSleep(route.getNodeSessionTimeoutMs() + 1000);
+
             initServerNodeRoute();
-            return tryAllocOnce(key);
+
+            return tryAllocOnce(type);
         }
     }
 
@@ -54,12 +61,13 @@ public class IdAllocatorClient {
         return this;
     }
 
-    private Long tryAllocOnce(String key) {
-        int intKey = Math.abs(key.hashCode()) % route.getMaxNodeSize();
-        String host = route.getServerNode(intKey);
+    private Long tryAllocOnce(String type) {
+        int key = Math.abs(type.hashCode()) % route.getMaxKeySize();
+        String host = route.getServerNode(key);
         Response response = HttpRequester.create()
                 .setUrl("http://" + host + "/id/alloc")
-                .putUrlParam("key", intKey)
+                .setTimeout(requestTimeoutMs)
+                .putUrlParam("key", key)
                 .putUrlParam("version", route.getVersion())
                 .get();
 
@@ -88,6 +96,7 @@ public class IdAllocatorClient {
             public void invoke(String host) {
                 Response response = HttpRequester.create()
                         .setUrl("http://" + host + "/id/route")
+                        .setTimeout(requestTimeoutMs)
                         .putUrlParam("version", route.getVersion())
                         .get();
 

@@ -42,7 +42,8 @@ class ServerNodeRouter {
         IdAllocatorManager.register(oldServerNodeRoute, serverNodeRoute)
 
         log.info(LogMessage("ServerNodeRouter", "onServerNodeChanged")
-                .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys))
+                .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys)
+                .success())
     }
 
     fun doRoute(nodes: List<ServerNode>, maxNodeSize: Int): ServerNodeRoute {
@@ -57,7 +58,7 @@ class ServerNodeRouter {
         }
 
         return ServerNodeRoute().apply {
-            this.maxNodeSize = DbConfig.get().maxIiaNodeSize.value.toInt()
+            this.nodeSessionTimeoutMs = DbConfig.get().nodeSessionTimeoutMs.value.toInt()
             this.version = calculateVersion(nodes)
             this.keyAndServerNodes = keyAndServerNodes
         }
@@ -71,7 +72,7 @@ class ServerNodeRouter {
 
     private inner class NodeChangedListener : PathChildrenCacheListener {
         override fun childEvent(client: CuratorFramework, event: PathChildrenCacheEvent) {
-            log.info(LogMessage("NodeChangedListener", "changed").append("event", event))
+            log.info(LogMessage("NodeChangedListener", "changed").append("event", event).success())
 
             val eventType = event.type
             if (eventType == PathChildrenCacheEvent.Type.CHILD_UPDATED ||

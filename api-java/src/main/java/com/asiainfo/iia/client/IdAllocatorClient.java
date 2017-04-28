@@ -61,7 +61,7 @@ public class IdAllocatorClient {
     }
 
     private Long tryAllocOnce(String type) {
-        int key = Math.abs(type.hashCode()) % route.getMaxKeySize();
+        int key = Math.abs(type.hashCode()) % route.getMaxSegmentSize();
         String host = route.getServerNode(key);
         Response response = HttpRequester.create()
                 .setUrl("http://" + host + "/id/alloc")
@@ -97,7 +97,7 @@ public class IdAllocatorClient {
     }
 
     private synchronized IdAllocatorClient setRoute(ServerNodeRoute route) {
-        if (route != null && route.getMaxKeySize() > 0) {
+        if (route != null && route.getMaxSegmentSize() > 0) {
             this.route = route;
 
             log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")

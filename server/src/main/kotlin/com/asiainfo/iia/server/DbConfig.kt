@@ -16,7 +16,7 @@ class DbConfig {
 
     lateinit var zkNode: ConfigItem
 
-    lateinit var maxIiaNodeSize: ConfigItem
+    lateinit var maxSegmentSize: ConfigItem
 
     lateinit var idAllocatorPoolSize: ConfigItem
 

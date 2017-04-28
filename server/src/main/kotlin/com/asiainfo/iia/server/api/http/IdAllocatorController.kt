@@ -38,11 +38,6 @@ class IdAllocatorController {
         }
 
         val id = IdAllocatorManager.alloc(key!!)
-        val serverNodeRoute = if (serverNodeRouter.serverNodeRoute.version != version) {
-            serverNodeRouter.serverNodeRoute
-        } else {
-            null
-        }
 
         if (log.isDebugEnabled) {
             log.debug(LogMessage("IdAllocatorController", "alloc")
@@ -54,7 +49,7 @@ class IdAllocatorController {
 
         return AllocResponse().apply {
             this.id = id
-            this.route = serverNodeRoute
+            this.route = route(version)
         }
     }
 

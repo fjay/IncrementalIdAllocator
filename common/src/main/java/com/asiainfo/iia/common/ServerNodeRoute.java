@@ -24,7 +24,7 @@ public class ServerNodeRoute implements Serializable {
 
     private int nodeSessionTimeoutMs;
 
-    public int getMaxKeySize() {
+    public int getMaxSegmentSize() {
         return keyAndServerNodes.size();
     }
 

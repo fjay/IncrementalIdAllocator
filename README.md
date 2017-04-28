@@ -1,12 +1,12 @@
-# 分布式增长序列化生成器
+# 分布式增长ID生成器
 
-IncrementalIdAllocator为轻量级的分布式ID生成器，包含以下特点：
+IncrementalIdAllocator为轻量级的分布式增长ID生成器，包含以下特点：
 
 * 支持长整型id生成，且保证id绝对趋势增长，即后生成的id永远大于之前的id
 * 生成速度快，且支持水平扩展，仅需简单配置
 * 生成服务器高可用，少数节点故障不影响整体服务
 
-##HOW TO USE
+## HOW TO USE
 
 ## 客户端
 

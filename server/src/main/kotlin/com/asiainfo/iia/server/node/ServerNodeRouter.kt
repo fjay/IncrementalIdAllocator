@@ -34,9 +34,9 @@ class ServerNodeRouter {
     fun onServerNodeChanged() {
         val oldServerNodeRoute = serverNodeRoute;
 
-        serverNodeRoute = doRoute(
+        serverNodeRoute = buildRoute(
                 onlineServerNodeManager.loadOnlineServerNodes(),
-                DbConfig.get().maxIiaNodeSize.value.toInt()
+                DbConfig.get().maxSegmentSize.value.toInt()
         )
 
         IdAllocatorManager.register(oldServerNodeRoute, serverNodeRoute)
@@ -46,7 +46,7 @@ class ServerNodeRouter {
                 .success())
     }
 
-    fun doRoute(nodes: List<ServerNode>, maxNodeSize: Int): ServerNodeRoute {
+    fun buildRoute(nodes: List<ServerNode>, maxNodeSize: Int): ServerNodeRoute {
         val policy = ConsistentHashPolicy(nodes.map {
             ConsistentHashPolicy.PhysicalNode(Constant.APPLICATION_ID, it.ip, it.port)
         }, maxNodeSize)

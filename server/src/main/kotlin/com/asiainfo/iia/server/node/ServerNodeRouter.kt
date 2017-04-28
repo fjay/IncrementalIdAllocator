@@ -52,7 +52,7 @@ class ServerNodeRouter {
         }, maxNodeSize)
 
         val keyAndServerNodes = HashMap<Int, String>()
-        (0..maxNodeSize).forEach {
+        (0..maxNodeSize - 1).forEach {
             val node = policy.getNode(it.toString())
             keyAndServerNodes[it] = node.ip + ":" + node.port
         }

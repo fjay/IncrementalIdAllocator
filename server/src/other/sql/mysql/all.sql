@@ -35,7 +35,7 @@ VALUES ('DEFAULT', 'IIA', 'IIA_0', NULL, 'IIA_NODES', '1', '127.0.0.1:7001', 'II
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
 VALUES ('DEFAULT', 'IIA', 'IIA_1', NULL, 'IIA_NODES', '1', '127.0.0.1:7000', 'IIA节点服务器', NULL, '2017-04-27', NULL);
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'MAX_IIA_NODE_SIZE', NULL, 'COMMON', '1', '65535', '最大IIA节点服务器数量', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'MAX_IIA_NODE_SIZE', NULL, 'COMMON', '1', '50000', '最大IIA节点服务器数量', NULL, '2017-04-27', NULL);
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
 VALUES
   ('DEFAULT', 'IIA', 'NODE_SESSION_TIMEOUT_MS', NULL, 'COMMON', '1', '3000', '节点Session有效期（毫秒）', NULL, '2017-04-27',

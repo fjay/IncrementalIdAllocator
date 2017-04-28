@@ -18,43 +18,6 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     </properties>
 
-
-    <profiles>
-        <profile>
-            <id>development</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!-- database -->
-                <database.url>jdbc:mysql://127.0.0.1:3306/womail_notification_center?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;autoReconnectForPools=true</database.url>
-                <database.username>root</database.username>
-                <database.password>1234</database.password>
-                <database.validationQuery>select 1</database.validationQuery>
-
-                <!-- log4j -->
-                <log4j.appender>stdout</log4j.appender>
-                <log4j.level>DEBUG</log4j.level>
-                <log4j.logfile/>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <!-- database -->
-                <database.url>jdbc:mysql://10.1.248.11:3706/haoduan?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;autoReconnectForPools=true</database.url>
-                <database.username>haoduan</database.username>
-                <database.password>haoduan</database.password>
-                <database.validationQuery>select 1</database.validationQuery>
-
-                <!-- log4j -->
-                <log4j.appender>logfile</log4j.appender>
-                <log4j.level>INFO</log4j.level>
-                <log4j.logfile>./logs/${project.name}.log</log4j.logfile>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

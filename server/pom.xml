@@ -72,11 +72,6 @@
             <version>${common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.asiainfo.common</groupId>
-            <artifactId>asiainfo-zookeeper</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.team4u.fhs</groupId>
             <artifactId>fast-http-server</artifactId>
             <version>1.0.7</version>
@@ -90,6 +85,21 @@
             <groupId>com.asiainfo.conf</groupId>
             <artifactId>conf-center-client</artifactId>
             <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.30</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

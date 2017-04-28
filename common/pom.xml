@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.30</version>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.31</version>
@@ -29,16 +24,6 @@
             <artifactId>asiainfo-util</artifactId>
             <version>1.1.7</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.asiainfo.dao</groupId>
-            <artifactId>simple-dao</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.asiainfo.mqcluster</groupId>
-            <artifactId>mqcluster-client</artifactId>
-            <version>2.0.7</version>
         </dependency>
     </dependencies>
 

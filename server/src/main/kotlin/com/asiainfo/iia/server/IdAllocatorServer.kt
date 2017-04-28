@@ -28,24 +28,29 @@ object IdAllocatorServer : Closeable {
             }
         })
 
-        start()
-    }
-
-    fun start() {
         val logMessage = LogMessage("IdAllocatorServer", "start")
                 .processing()
 
         log.info(logMessage)
 
+        try {
+            start()
+
+            log.info(logMessage
+                    .append("node", ApplicationContext.currentServerNode)
+                    .success())
+        } catch (e: Throwable) {
+            log.info(logMessage.fail())
+            System.exit(1)
+        }
+    }
+
+    fun start() {
         PropertyConfigurator.configureAndWatch(FileUtil.findFile("log4j.properties").absolutePath, 1000)
 
         ApplicationContext.initialize()
 
         httpServer = IdAllocatorHttpServer(ApplicationContext.currentServerNode.port).start();
-
-        log.info(logMessage
-                .append("node", ApplicationContext.currentServerNode)
-                .success())
     }
 
     override fun close() {

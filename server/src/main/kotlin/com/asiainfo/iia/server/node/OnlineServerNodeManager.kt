@@ -1,16 +1,18 @@
 package com.asiainfo.iia.server.node
 
+import com.asiainfo.common.util.IoUtil
 import com.asiainfo.iia.server.model.ServerNode
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.recipes.cache.PathChildrenCache
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
 import org.apache.zookeeper.CreateMode
+import java.io.Closeable
 import java.util.*
 
 /**
  * @author Jay Wu
  */
-class OnlineServerNodeManager(val client: CuratorFramework) {
+class OnlineServerNodeManager(val client: CuratorFramework) : Closeable {
 
     companion object {
         private val ONLINE_SERVER_NODE_PATH = "/onlineServerNodes"
@@ -37,5 +39,9 @@ class OnlineServerNodeManager(val client: CuratorFramework) {
             val (id, ip, port) = it.path.split("/").last().split(":")
             ServerNode(id, ip, port.toInt())
         }?.distinct() ?: Collections.emptyList()
+    }
+
+    override fun close() {
+        IoUtil.safeClose(onlinePathCache)
     }
 }

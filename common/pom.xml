@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.asiainfo.common</groupId>
             <artifactId>asiainfo-util</artifactId>
-            <version>1.1.7</version>
+            <version>1.1.8</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -22,7 +22,7 @@
             <directory>target/classes</directory>
             <outputDirectory>.</outputDirectory>
             <includes>
-                <include>ioc/*</include>
+                <include>config.js</include>
                 <include>log4j.properties</include>
             </includes>
         </fileSet>

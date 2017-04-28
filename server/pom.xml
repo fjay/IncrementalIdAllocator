@@ -178,7 +178,7 @@
                         </manifestEntries>
                     </archive>
                     <excludes>
-                        <exclude>**/ioc/*</exclude>
+                        <exclude>**/config.js</exclude>
                         <exclude>**/log4j.properties</exclude>
                     </excludes>
                     <outputDirectory>${project.build.directory}/tmp</outputDirectory>

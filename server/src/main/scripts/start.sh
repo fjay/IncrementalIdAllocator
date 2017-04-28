@@ -10,7 +10,7 @@ cd `dirname $0`
 JAVA_HOME="/usr"
 
 JAVA_OPTS="-Dfile.encoding=UTF-8 -Xmx2048m"
-APP_JAR_NAME="short-link-server-*"
+APP_JAR_NAME="incremental-id-allocator-server-*"
 APP_HOME=`pwd`
 APP_PIDFILE=./pid.txt
 

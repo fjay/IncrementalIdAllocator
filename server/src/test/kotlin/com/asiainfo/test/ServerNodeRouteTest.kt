@@ -1,6 +1,6 @@
 package com.asiainfo.test
 
-import com.asiainfo.iia.common.ServerNodeRoute
+import com.asiainfo.iia.common.model.ServerNodeRoute
 import org.junit.Assert
 import org.junit.Test
 

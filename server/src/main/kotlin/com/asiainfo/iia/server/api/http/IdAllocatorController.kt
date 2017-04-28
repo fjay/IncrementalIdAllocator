@@ -3,8 +3,8 @@ package com.asiainfo.iia.server.api.http;
 import com.asiainfo.common.kotlin.extension.isNotEmpty
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
-import com.asiainfo.iia.common.AllocResponse
-import com.asiainfo.iia.common.ServerNodeRoute
+import com.asiainfo.iia.common.model.AllocResponse
+import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.ApplicationErrorCode
 import com.asiainfo.iia.server.id.IdAllocatorManager

@@ -21,7 +21,7 @@ class OnlineServerNodeManager(val client: CuratorFramework) : Closeable {
     private var onlinePathCache: PathChildrenCache? = null
 
     fun registerAndWatch(node: ServerNode, listener: PathChildrenCacheListener) {
-        // 完整路径为 /namespace/path/node:seq 例如: /IIA/onlineServerNodes/IIA_0:127.0.0.1:7000
+        // 完整路径为 /namespace/path/node 例如: /IIA/onlineServerNodes/IIA_0:127.0.0.1:7000
         val nodePath = "$ONLINE_SERVER_NODE_PATH/$node"
 
         client.create()
@@ -30,12 +30,12 @@ class OnlineServerNodeManager(val client: CuratorFramework) : Closeable {
                 .forPath(nodePath)
 
         onlinePathCache = PathChildrenCache(client, ONLINE_SERVER_NODE_PATH, false)
-        onlinePathCache!!.listenable.addListener(listener)
-        onlinePathCache!!.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE)
+        onlinePathCache?.listenable?.addListener(listener)
+        onlinePathCache?.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE)
     }
 
     fun loadOnlineServerNodes(): List<ServerNode> {
-        return onlinePathCache!!.currentData?.map {
+        return onlinePathCache?.currentData?.map {
             val (id, ip, port) = it.path.split("/").last().split(":")
             ServerNode(id, ip, port.toInt())
         }?.distinct() ?: Collections.emptyList()

@@ -3,7 +3,7 @@ package com.asiainfo.iia.server.id
 import com.asiainfo.common.util.Registrar
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
-import com.asiainfo.iia.common.ServerNodeRoute
+import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.DbConfig
 import com.asiainfo.iia.server.node.ServerNodeRouter
@@ -16,10 +16,11 @@ import java.util.*
 object IdAllocatorManager : Registrar<Int, IdAllocator>() {
 
     var enabled = true
+        set
 
     private val log = Logs.get()
 
-    fun register(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
+    fun buildIdAllocators(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
         val oldKeys = oldOne.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
         val newKeys = newOne.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
 
@@ -35,15 +36,16 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
             unregister(it)
         }
 
-        log.info(LogMessage("IdAllocatorManager", "register")
+        log.info(LogMessage("IdAllocatorManager", "buildIdAllocators")
                 .append("addKeys", addKeys.size)
                 .append("removeKeys", removeKeys.size)
                 .success())
     }
 
     fun accept(key: Int): Boolean {
-        return enabled && ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
-                ApplicationContext.currentServerNode.ipAndPort()
+        return enabled &&
+                ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
+                        ApplicationContext.currentServerNode.ipAndPort()
     }
 
     fun alloc(key: Int): Long? {

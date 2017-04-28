@@ -1,4 +1,4 @@
-package com.asiainfo.iia.common;
+package com.asiainfo.iia.common.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.asiainfo.common.util.MapUtil;

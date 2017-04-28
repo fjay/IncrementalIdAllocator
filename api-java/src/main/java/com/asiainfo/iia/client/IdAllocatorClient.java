@@ -7,8 +7,8 @@ import com.asiainfo.common.util.log.Log;
 import com.asiainfo.common.util.log.LogMessage;
 import com.asiainfo.common.util.log.Logs;
 import com.asiainfo.common.util.policy.RoundRobinPolicy;
-import com.asiainfo.iia.common.AllocResponse;
-import com.asiainfo.iia.common.ServerNodeRoute;
+import com.asiainfo.iia.common.model.AllocResponse;
+import com.asiainfo.iia.common.model.ServerNodeRoute;
 
 import java.util.List;
 

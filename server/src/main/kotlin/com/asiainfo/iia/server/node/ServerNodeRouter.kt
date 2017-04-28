@@ -4,7 +4,7 @@ import com.asiainfo.common.util.EncryptUtil
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
 import com.asiainfo.common.util.policy.ConsistentHashPolicy
-import com.asiainfo.iia.common.ServerNodeRoute
+import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.Constant
 import com.asiainfo.iia.server.DbConfig
@@ -39,7 +39,7 @@ class ServerNodeRouter {
                 DbConfig.get().maxSegmentSize.value.toInt()
         )
 
-        IdAllocatorManager.register(oldServerNodeRoute, serverNodeRoute)
+        IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)
 
         log.info(LogMessage("ServerNodeRouter", "onServerNodeChanged")
                 .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys)

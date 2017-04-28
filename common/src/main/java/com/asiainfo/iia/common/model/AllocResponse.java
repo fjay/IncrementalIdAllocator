@@ -1,4 +1,4 @@
-package com.asiainfo.iia.common;
+package com.asiainfo.iia.common.model;
 
 /**
  * @author Jay Wu

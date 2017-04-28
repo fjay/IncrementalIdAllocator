@@ -74,22 +74,16 @@ class ServerNodeRouter {
         override fun childEvent(client: CuratorFramework, event: PathChildrenCacheEvent) {
             log.info(LogMessage("NodeChangedListener", "changed").append("event", event).success())
 
-            val eventType = event.type
-            if (eventType == PathChildrenCacheEvent.Type.CHILD_UPDATED ||
-                    eventType == PathChildrenCacheEvent.Type.CHILD_ADDED ||
-                    eventType == PathChildrenCacheEvent.Type.CHILD_REMOVED) {
-                onServerNodeChanged()
-                return
-            }
+            when (event.type) {
+                PathChildrenCacheEvent.Type.CHILD_UPDATED,
+                PathChildrenCacheEvent.Type.CHILD_ADDED,
+                PathChildrenCacheEvent.Type.CHILD_REMOVED -> onServerNodeChanged()
 
-            if (eventType == PathChildrenCacheEvent.Type.CONNECTION_LOST) {
-                IdAllocatorManager.enabled = false
-                return
-            }
+                PathChildrenCacheEvent.Type.CONNECTION_LOST -> IdAllocatorManager.enabled = false
 
-            if (eventType == PathChildrenCacheEvent.Type.CONNECTION_RECONNECTED) {
-                IdAllocatorManager.enabled = true
-                return
+                PathChildrenCacheEvent.Type.CONNECTION_RECONNECTED -> IdAllocatorManager.enabled = true
+
+                else -> return
             }
         }
     }

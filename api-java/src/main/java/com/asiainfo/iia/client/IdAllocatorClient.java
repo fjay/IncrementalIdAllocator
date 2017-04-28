@@ -47,7 +47,6 @@ public class IdAllocatorClient {
             ThreadUtil.safeSleep(route.getNodeSessionTimeoutMs() + 1000);
 
             initServerNodeRoute();
-
             return tryAllocOnce(type);
         }
     }
@@ -74,17 +73,9 @@ public class IdAllocatorClient {
         AllocResponse allocResponse = handleResponse(response, AllocResponse.class);
 
         if (allocResponse != null) {
-            if (allocResponse.getRoute() != null) {
-                route = allocResponse.getRoute();
-
-                log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")
-                        .append("nodes", route.getServerNodeAndKeys().keySet())
-                        .success());
-            }
-
+            setRoute(allocResponse.getRoute());
             return allocResponse.getId();
         }
-
 
         ClientErrorCode.REQUEST_ERROR.error("Alloc id fail");
         return null;
@@ -100,17 +91,21 @@ public class IdAllocatorClient {
                         .putUrlParam("version", route.getVersion())
                         .get();
 
-                ServerNodeRoute newRoute = handleResponse(response, ServerNodeRoute.class);
-
-                if (newRoute != null) {
-                    route = newRoute;
-
-                    log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")
-                            .append("nodes", route.getServerNodeAndKeys().keySet())
-                            .success());
-                }
+                setRoute(handleResponse(response, ServerNodeRoute.class));
             }
         });
+    }
+
+    private synchronized IdAllocatorClient setRoute(ServerNodeRoute route) {
+        if (route != null && route.getMaxKeySize() > 0) {
+            this.route = route;
+
+            log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")
+                    .append("nodes", route.getServerNodeAndKeys().keySet())
+                    .success());
+        }
+
+        return this;
     }
 
     private <T> T handleResponse(Response response, Class<T> clazz) {

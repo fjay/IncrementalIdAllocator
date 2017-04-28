@@ -35,12 +35,10 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
             unregister(it)
         }
 
-        if (log.isDebugEnabled) {
-            log.debug(LogMessage("IdAllocatorManager", "register")
-                    .append("addKeys", addKeys)
-                    .append("removeKeys", removeKeys)
-                    .success())
-        }
+        log.info(LogMessage("IdAllocatorManager", "register")
+                .append("addKeys", addKeys.size)
+                .append("removeKeys", removeKeys.size)
+                .success())
     }
 
     fun accept(key: Int): Boolean {

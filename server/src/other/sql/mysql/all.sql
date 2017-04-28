@@ -29,7 +29,7 @@ CREATE TABLE config_item
 
 
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'ID_ALLOCATOR_POOL_SIZE', NULL, 'COMMON', '1', '10', 'ID分配器缓存池', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'ID_ALLOCATOR_POOL_SIZE', NULL, 'COMMON', '1', '1000', 'ID分配器缓存池', NULL, '2017-04-27', NULL);
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
 VALUES ('DEFAULT', 'IIA', 'IIA_0', NULL, 'IIA_NODES', '1', '127.0.0.1:7001', 'IIA节点服务器', NULL, '2017-04-27', NULL);
 INSERT INTO idconfig_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)

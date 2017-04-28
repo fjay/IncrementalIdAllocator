@@ -66,7 +66,7 @@ log4j.properties
 ```
 log4j.appender.logfile.File=${log4j.logfile}
 
-log4j.logger.com.asiainfo=${log4j.level}
+log4j.logger.com.asiainfo.iia=${log4j.level}
 ```
 
 config.js：

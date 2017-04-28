@@ -15,9 +15,9 @@ import java.util.*
  */
 object IdAllocatorManager : Registrar<Int, IdAllocator>() {
 
-    private val log = Logs.get()
+    var enabled = true
 
-    var online = true
+    private val log = Logs.get()
 
     fun register(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
         val oldKeys = oldOne.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
@@ -42,7 +42,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     }
 
     fun accept(key: Int): Boolean {
-        return online && ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
+        return enabled && ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
                 ApplicationContext.currentServerNode.ipAndPort()
     }
 

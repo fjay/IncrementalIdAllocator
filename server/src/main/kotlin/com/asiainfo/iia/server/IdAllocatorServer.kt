@@ -5,19 +5,9 @@ import com.asiainfo.common.util.IoUtil
 import com.asiainfo.common.util.TimerUtil
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
-import com.asiainfo.iia.server.api.web.IdAllocatorController
+import com.asiainfo.iia.server.api.web.IdAllocatorHttpServer
 import org.apache.log4j.PropertyConfigurator
-import org.team4u.fhs.server.HttpServer
-import org.team4u.fhs.server.impl.netty.NettyHttpServer
-import org.team4u.fhs.server.impl.netty.NettyHttpServerConfig
-import org.team4u.fhs.web.DefaultHttpRouter
-import org.team4u.fhs.web.RoutingContext
-import org.team4u.fhs.web.ext.view.FastJsonViewResolver
-import org.team4u.fhs.web.handler.method.RequestMappingHandlerMapping
 import java.io.Closeable
-import java.util.concurrent.LinkedTransferQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -28,7 +18,7 @@ object IdAllocatorServer : Closeable {
 
     private val log = Logs.get()
 
-    private var server: HttpServer? = null
+    private var httpServer: IdAllocatorHttpServer? = null
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -51,17 +41,7 @@ object IdAllocatorServer : Closeable {
 
         ApplicationContext.initialize()
 
-        val pool = ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, LinkedTransferQueue<Runnable>());
-
-        val router = DefaultHttpRouter()
-                .addLastHandlerMapping(RequestMappingHandlerMapping().addController(IdAllocatorController()))
-                .addFirstViewResolver(FastJsonViewResolver())
-
-        server = NettyHttpServer(NettyHttpServerConfig().setRequestThreadPool(pool))
-                .onRequest { request, response ->
-                    val context = RoutingContext().setRequest(request).setResponse(response)
-                    router.doRoute(context);
-                }.listen(ApplicationContext.currentServerNode.port);
+        httpServer = IdAllocatorHttpServer(ApplicationContext.currentServerNode.port).start();
 
         log.info(logMessage
                 .append("node", ApplicationContext.currentServerNode)
@@ -71,7 +51,7 @@ object IdAllocatorServer : Closeable {
     override fun close() {
         log.info(LogMessage("IdAllocatorServer", "close").processing())
 
-        IoUtil.safeClose(server)
+        IoUtil.safeClose(httpServer)
         TimerUtil.depose()
         ApplicationContext.close()
 

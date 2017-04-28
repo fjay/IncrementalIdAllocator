@@ -19,12 +19,12 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
  */
 class ServerNodeRouter {
 
+    var serverNodeRoute: ServerNodeRoute = ServerNodeRoute()
+        get
+
     private val log = Logs.get()
 
     private val onlineServerNodeManager = ApplicationContext.get(OnlineServerNodeManager::class.java)
-
-    var serverNodeRoute: ServerNodeRoute = ServerNodeRoute()
-        get
 
     init {
         onlineServerNodeManager.registerAndWatch(ApplicationContext.currentServerNode, NodeChangedListener())
@@ -83,12 +83,12 @@ class ServerNodeRouter {
             }
 
             if (eventType == PathChildrenCacheEvent.Type.CONNECTION_LOST) {
-                IdAllocatorManager.online = false
+                IdAllocatorManager.enabled = false
                 return
             }
 
             if (eventType == PathChildrenCacheEvent.Type.CONNECTION_RECONNECTED) {
-                IdAllocatorManager.online = true
+                IdAllocatorManager.enabled = true
                 return
             }
         }

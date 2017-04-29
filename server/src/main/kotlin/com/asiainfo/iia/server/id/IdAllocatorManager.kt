@@ -21,8 +21,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     private val log = Logs.get()
 
     fun buildIdAllocators(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
-        val oldKeys = getKeys(oldOne)
-        val newKeys = getKeys(newOne)
+        val oldKeys = getCurrentServerNodeKeys(oldOne)
+        val newKeys = getCurrentServerNodeKeys(newOne)
 
         val addKeys = newKeys - oldKeys
         addKeys.forEach {
@@ -56,7 +56,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
         return get(key).alloc()
     }
 
-    private fun getKeys(route: ServerNodeRoute): Set<Int> {
+    private fun getCurrentServerNodeKeys(route: ServerNodeRoute): Set<Int> {
         return route.serverNodeAndKeys[ApplicationContext.currentServerNode.getIpAndPort()] ?: Collections.emptySet<Int>()
     }
 }

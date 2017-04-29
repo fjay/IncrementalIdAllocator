@@ -34,7 +34,7 @@ class ServerNodeRouter {
         onServerNodeChanged()
     }
 
-    fun buildRoute(nodes: List<ServerNode>, maxSegmentSize: Int): ServerNodeRoute {
+    fun buildRoute(nodes: List<ServerNode>, maxSegmentSize: Int, nodeSessionTimeoutMs: Int): ServerNodeRoute {
         val policy = ConsistentHashPolicy(nodes.map {
             ConsistentHashPolicy.PhysicalNode(Constant.APPLICATION_ID, it.ip, it.port)
         }, maxSegmentSize)
@@ -46,13 +46,13 @@ class ServerNodeRouter {
         }
 
         return ServerNodeRoute().apply {
-            this.nodeSessionTimeoutMs = DbConfig.get().nodeSessionTimeoutMs.value.toInt()
+            this.nodeSessionTimeoutMs = nodeSessionTimeoutMs
             this.version = calculateVersion(nodes)
             this.keyAndServerNodes = keyAndServerNodes
         }
     }
 
-    fun calculateVersion(nodes: List<ServerNode>): String {
+    private fun calculateVersion(nodes: List<ServerNode>): String {
         return EncryptUtil.encryptWithMD5(nodes.map {
             it.toString()
         }.joinToString(","))
@@ -63,7 +63,8 @@ class ServerNodeRouter {
 
         serverNodeRoute = buildRoute(
                 onlineServerNodeManager.loadOnlineServerNodes(),
-                DbConfig.get().maxSegmentSize.value.toInt()
+                DbConfig.get().maxSegmentSize.value.toInt(),
+                DbConfig.get().nodeSessionTimeoutMs.value.toInt()
         )
 
         IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)

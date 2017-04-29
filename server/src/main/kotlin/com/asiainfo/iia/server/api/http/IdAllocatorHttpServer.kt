@@ -29,8 +29,7 @@ class IdAllocatorHttpServer(val port: Int) : Closeable {
 
         server = NettyHttpServer(NettyHttpServerConfig().setRequestThreadPool(pool))
                 .onRequest { request, response ->
-                    val context = RoutingContext().setRequest(request).setResponse(response)
-                    router.doRoute(context);
+                    router.doRoute(RoutingContext().setRequest(request).setResponse(response));
                 }.listen(port);
 
         return this;

@@ -5,9 +5,9 @@ package com.asiainfo.iia.server.model
  */
 data class ServerNode(val id: String, val ip: String, val port: Int) {
 
-    fun ipAndPort() = "$ip:$port"
+    fun getIpAndPort() = "$ip:$port"
 
     override fun toString(): String {
-        return "$id:${ipAndPort()}"
+        return "$id:${getIpAndPort()}"
     }
 }

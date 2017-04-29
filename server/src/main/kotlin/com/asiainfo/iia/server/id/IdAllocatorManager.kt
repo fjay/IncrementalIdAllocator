@@ -45,7 +45,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     fun accept(key: Int): Boolean {
         return enabled &&
                 ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
-                        ApplicationContext.currentServerNode.ipAndPort()
+                        ApplicationContext.currentServerNode.getIpAndPort()
     }
 
     fun alloc(key: Int): Long? {
@@ -57,6 +57,6 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     }
 
     private fun getKeys(route: ServerNodeRoute): Set<Int> {
-        return route.serverNodeAndKeys[ApplicationContext.currentServerNode.ipAndPort()] ?: Collections.emptySet<Int>()
+        return route.serverNodeAndKeys[ApplicationContext.currentServerNode.getIpAndPort()] ?: Collections.emptySet<Int>()
     }
 }

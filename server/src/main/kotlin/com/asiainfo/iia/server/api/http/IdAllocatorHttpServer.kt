@@ -21,7 +21,7 @@ class IdAllocatorHttpServer(val port: Int) : Closeable {
     private var server: HttpServer? = null
 
     fun start(): IdAllocatorHttpServer {
-        val pool = ThreadPoolExecutor(50, 50, 0L, TimeUnit.MILLISECONDS, LinkedTransferQueue<Runnable>());
+        val pool = ThreadPoolExecutor(5, 50, 0L, TimeUnit.MILLISECONDS, LinkedTransferQueue<Runnable>());
 
         val router = DefaultHttpRouter()
                 .addLastHandlerMapping(RequestMappingHandlerMapping().addController(IdAllocatorController()))

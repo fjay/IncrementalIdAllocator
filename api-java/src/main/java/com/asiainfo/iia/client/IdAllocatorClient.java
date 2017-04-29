@@ -40,9 +40,9 @@ public class IdAllocatorClient {
         try {
             return tryAllocOnce(type);
         } catch (Exception e) {
-            log.debug(new LogMessage("IdAllocatorClient", "firstAlloc")
+            log.debug(new LogMessage("IdAllocatorClient", "tryAllocOnce")
                     .append("type", type)
-                    .fail());
+                    .fail(e.getMessage()));
 
             ThreadUtil.safeSleep(route.getNodeSessionTimeoutMs() + 1000);
 
@@ -96,24 +96,20 @@ public class IdAllocatorClient {
         });
     }
 
-    private synchronized IdAllocatorClient setRoute(ServerNodeRoute route) {
-        if (route != null && route.getMaxSegmentSize() > 0) {
-            this.route = route;
-
-            log.info(new LogMessage("IdAllocatorClient", "initServerNodeRoute")
-                    .append("nodes", route.getServerNodeAndKeys().keySet())
-                    .success());
+    private synchronized void setRoute(ServerNodeRoute route) {
+        if (route == null || route.getMaxSegmentSize() == 0) {
+            return;
         }
 
-        return this;
+        this.route = route;
+
+        log.info(new LogMessage("IdAllocatorClient", "setRoute")
+                .append("nodes", route.getServerNodeAndKeys().keySet())
+                .success());
     }
 
     private <T> T handleResponse(Response response, Class<T> clazz) {
         return JsonUtil.fromJson(clazz, handleResponse(response));
-    }
-
-    private <T> T handleResponse(Response response, TypeReference<T> typeRef) {
-        return JsonUtil.fromJson(typeRef.getType(), handleResponse(response));
     }
 
     private String handleResponse(Response response) {

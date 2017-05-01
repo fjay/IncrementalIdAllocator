@@ -7,6 +7,8 @@ import com.asiainfo.iia.server.model.ServerNode
  */
 class LocalServerConfig : ServerConfig {
 
+    override lateinit var namespace: String
+
     lateinit var node: String
 
     override val serverNode: ServerNode by lazy {

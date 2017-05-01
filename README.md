@@ -86,6 +86,8 @@ server/src/other/sql/mysql/all.sql
 ```
 serverConfig: {
     fields: {
+        // 命名空间
+        namespace: "IIA",
         // 节点标识，需要与config_item中的config_item_id一致
         nodeId: "IIA_0",
         // 数据库配置
@@ -108,6 +110,8 @@ serverConfig: {
 ```
 serverConfig: {
     fields: {
+        // 命名空间
+        namespace: "IIA",
         // IIA本机节点信息
         node: "127.0.0.1:7000",
         // zookeeper节点信息，多个节点采用逗号隔开

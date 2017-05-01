@@ -27,7 +27,7 @@ object ApplicationContext {
     fun initialize() {
         initIoc()
         initServerConfig()
-        initZKClient()
+        initZkClient()
     }
 
     fun initIoc() {
@@ -48,7 +48,7 @@ object ApplicationContext {
         log.info(logMessage.success())
     }
 
-    fun initZKClient() {
+    fun initZkClient() {
         val logMessage = LogMessage("ApplicationContext", "initZKClient")
                 .append("host", config.zkNode)
                 .processing()
@@ -61,7 +61,7 @@ object ApplicationContext {
                 .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
                 .sessionTimeoutMs(nodeRefreshIntervalMs)
                 .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
-                .namespace(Constant.APPLICATION_ID)
+                .namespace(ApplicationContext.config.namespace)
                 .build()
 
         zkClient.start()

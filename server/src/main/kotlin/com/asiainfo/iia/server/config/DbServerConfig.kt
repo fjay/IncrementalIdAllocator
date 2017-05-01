@@ -5,7 +5,6 @@ import com.asiainfo.conf.client.loader.DbConfigItemLoader
 import com.asiainfo.conf.client.loader.InMemoryConfigItemLoader
 import com.asiainfo.conf.common.entity.ConfigItem
 import com.asiainfo.iia.server.ApplicationErrorCode
-import com.asiainfo.iia.server.Constant
 import com.asiainfo.iia.server.model.ServerNode
 import java.util.concurrent.TimeUnit
 import javax.sql.DataSource
@@ -15,13 +14,15 @@ import javax.sql.DataSource
  */
 class DbServerConfig() : ServerConfig {
 
+    override lateinit var namespace: String
+
     lateinit var nodeId: String
 
     lateinit var dataSource: DataSource
 
     private val client: InMemoryConfigItemLoader by lazy {
         val loader = InMemoryConfigItemLoader(
-                DbConfigItemLoader(Constant.APPLICATION_ID, "DEFAULT", dataSource)
+                DbConfigItemLoader(namespace, "DEFAULT", dataSource)
         )
 
         loader.watch(TimeUnit.SECONDS, 30L) { _, _ ->

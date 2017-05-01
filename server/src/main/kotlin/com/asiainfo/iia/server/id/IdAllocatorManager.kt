@@ -18,6 +18,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
 
     private val log = Logs.get()
 
+    private val serverNodeRouter = ApplicationContext.ioc.get(ServerNodeRouter::class.java)
+
     fun buildIdAllocators(oldOne: ServerNodeRoute, newOne: ServerNodeRoute) {
         val oldKeys = getCurrentServerNodeKeys(oldOne)
         val newKeys = getCurrentServerNodeKeys(newOne)
@@ -41,9 +43,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     }
 
     fun accept(key: Int): Boolean {
-        return enabled &&
-                ApplicationContext.ioc.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
-                        ApplicationContext.config.serverNode.toString()
+        return enabled && serverNodeRouter.serverNodeRoute.getServerNode(key) ==
+                ApplicationContext.config.serverNode.toString()
     }
 
     fun alloc(key: Int): Long? {

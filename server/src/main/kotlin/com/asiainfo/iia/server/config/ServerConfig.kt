@@ -4,6 +4,8 @@ import com.asiainfo.iia.server.model.ServerNode
 
 interface ServerConfig {
 
+    val namespace: String
+
     val serverNode: ServerNode
 
     val zkNode: String

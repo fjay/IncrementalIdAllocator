@@ -6,7 +6,6 @@ import com.asiainfo.common.util.log.Logs
 import com.asiainfo.common.util.policy.ConsistentHashPolicy
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
-import com.asiainfo.iia.server.Constant
 import com.asiainfo.iia.server.id.IdAllocatorManager
 import com.asiainfo.iia.server.model.ServerNode
 import org.apache.curator.framework.CuratorFramework
@@ -39,7 +38,7 @@ class ServerNodeRouter {
 
     fun buildRoute(nodes: List<ServerNode>, maxSegmentSize: Int, nodeSessionTimeoutMs: Int): ServerNodeRoute {
         val policy = ConsistentHashPolicy(nodes.map {
-            ConsistentHashPolicy.PhysicalNode(Constant.APPLICATION_ID, it.ip, it.port)
+            ConsistentHashPolicy.PhysicalNode("", it.ip, it.port)
         }, maxSegmentSize)
 
         val keyAndServerNodes = HashMap<Int, String>()

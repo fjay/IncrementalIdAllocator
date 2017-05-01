@@ -63,6 +63,8 @@ object IdAllocatorServer : Closeable {
         IoUtil.safeClose(ApplicationContext.ioc.get(OnlineServerNodeManager::class.java))
         IoUtil.safeClose(ApplicationContext.zkClient)
 
+        ApplicationContext.ioc.depose()
+
         log.info(LogMessage("IdAllocatorServer", "close").success())
     }
 }

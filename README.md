@@ -81,7 +81,7 @@ server/src/other/sql/mysql/all.sql
 
 调整config.js：
 
-```json
+```
 serverConfig: {
     fields: {
         // 节点标识，需要与config_item中的config_item_id一致
@@ -103,7 +103,7 @@ serverConfig: {
 
 调整config.js：
 
-```json
+```
 serverConfig: {
     fields: {
         // IIA本机节点信息

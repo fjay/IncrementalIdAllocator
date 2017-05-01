@@ -128,10 +128,16 @@ serverConfig: {
 
 ### 运行服务
 
-执行以下命令：
+Linux下执行以下命令（后台运行）：
 
 ```shell
 sh start.sh start
+```
+
+Windows或者Linux执行以下命令（前台运行）：
+
+```shell
+java -jar incremental-id-allocator-server-1.0.0.jar
 ```
 
 END

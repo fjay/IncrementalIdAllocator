@@ -7,16 +7,18 @@ import com.asiainfo.common.util.policy.ConsistentHashPolicy
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.Constant
-import com.asiainfo.iia.server.DbConfig
 import com.asiainfo.iia.server.id.IdAllocatorManager
 import com.asiainfo.iia.server.model.ServerNode
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
+import org.nutz.ioc.loader.annotation.Inject
+import org.nutz.ioc.loader.annotation.IocBean
 
 /**
  * @author Jay Wu
  */
+@IocBean(create = "init")
 class ServerNodeRouter {
 
     var serverNodeRoute: ServerNodeRoute = ServerNodeRoute()
@@ -24,11 +26,12 @@ class ServerNodeRouter {
 
     private val log = Logs.get()
 
-    private val onlineServerNodeManager = ApplicationContext.get(OnlineServerNodeManager::class.java)
+    @Inject
+    private lateinit var onlineServerNodeManager: OnlineServerNodeManager
 
-    init {
+    fun init() {
         onlineServerNodeManager.registerAndWatch(
-                ApplicationContext.currentServerNode,
+                ApplicationContext.config.serverNode,
                 OnlinePathChildrenChangedListener()
         )
         onServerNodeChanged()
@@ -63,8 +66,8 @@ class ServerNodeRouter {
 
         serverNodeRoute = buildRoute(
                 onlineServerNodeManager.loadOnlineServerNodes(),
-                DbConfig.get().maxSegmentSize.value.toInt(),
-                DbConfig.get().nodeSessionTimeoutMs.value.toInt()
+                ApplicationContext.config.maxSegmentSize,
+                ApplicationContext.config.nodeSessionTimeoutMs
         )
 
         IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)

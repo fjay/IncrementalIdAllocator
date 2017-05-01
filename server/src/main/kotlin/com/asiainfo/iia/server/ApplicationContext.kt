@@ -1,114 +1,71 @@
 package com.asiainfo.iia.server
 
-import com.alibaba.druid.pool.DruidDataSource
-import com.asiainfo.common.kotlin.extension.isNotEmpty
-import com.asiainfo.common.util.ServiceProvider
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
-import com.asiainfo.dao.core.SimpleDao
-import com.asiainfo.iia.server.model.ServerNode
-import com.asiainfo.iia.server.node.OnlineServerNodeManager
-import com.asiainfo.iia.server.node.ServerNodeRouter
+import com.asiainfo.iia.server.config.ServerConfig
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.CuratorFrameworkFactory
 import org.apache.curator.retry.ExponentialBackoffRetry
-import javax.sql.DataSource
+import org.nutz.ioc.impl.NutIoc
+import org.nutz.ioc.loader.combo.ComboIocLoader
 
 /**
  *
  *
  * @author Jay Wu
  */
-object ApplicationContext : ServiceProvider() {
+object ApplicationContext {
 
     private val log = Logs.get()
 
-    lateinit var currentServerNode: ServerNode
+    lateinit var config: ServerConfig
+
+    lateinit var ioc: NutIoc
+
+    lateinit var zkClient: CuratorFramework
 
     fun initialize() {
-        initDao()
-        initCurrentServerNode()
+        initIoc()
+        initServerConfig()
         initZKClient()
-        initManager()
     }
 
-    fun initDao() {
-        register(DataSource::class.java, object : ServiceProvider.Factory<DataSource>() {
-            override fun create(): DataSource {
-                val logMessage = LogMessage("ApplicationContext", "initDao")
-                        .append("url", LocalConfig.get().dataSource.url)
-                        .processing()
+    fun initIoc() {
+        ioc = NutIoc(ComboIocLoader(
+                "*org.nutz.ioc.loader.json.JsonLoader", "config.js",
+                "*org.nutz.ioc.loader.annotation.AnnotationIocLoader",
+                "com.asiainfo.iia.server"));
+    }
 
-                log.info(logMessage)
+    fun initServerConfig() {
+        val logMessage = LogMessage("ApplicationContext", "initServerConfig")
+                .processing()
 
-                val dataSource = DruidDataSource().apply {
-                    url = LocalConfig.get().dataSource.url
-                    username = LocalConfig.get().dataSource.username
-                    password = LocalConfig.get().dataSource.password
-                    initialSize = LocalConfig.get().dataSource.initialSize
-                    maxActive = LocalConfig.get().dataSource.maxActive
-                    minIdle = LocalConfig.get().dataSource.minIdle
-                    minEvictableIdleTimeMillis = LocalConfig.get().dataSource.minEvictableIdleTimeMillis
-                    isDefaultAutoCommit = false
-                    isTestWhileIdle = true
-                    isTestOnBorrow = true
-                    validationQuery = LocalConfig.get().dataSource.validationQuery
-                    validationQueryTimeout = 5
-                    timeBetweenEvictionRunsMillis = 30000
-                }
+        log.info(logMessage)
 
-                log.info(logMessage.success())
-                return dataSource
-            }
-        })
+        config = ioc.get(ServerConfig::class.java)
 
-        register(SimpleDao::class.java, object : ServiceProvider.Factory<SimpleDao>() {
-            override fun create(): SimpleDao {
-                return SimpleDao(get(DataSource::class.java))
-            }
-        })
+        log.info(logMessage.success())
     }
 
     fun initZKClient() {
-        register(CuratorFramework::class.java, object : ServiceProvider.Factory<CuratorFramework>() {
-            override fun create(): CuratorFramework {
-                val logMessage = LogMessage("ApplicationContext", "initZKClient")
-                        .append("host", DbConfig.get().zkNode.value())
-                        .processing()
+        val logMessage = LogMessage("ApplicationContext", "initZKClient")
+                .append("host", config.zkNode)
+                .processing()
 
-                log.info(logMessage)
+        log.info(logMessage)
 
-                val nodeRefreshIntervalMs = DbConfig.get().nodeSessionTimeoutMs.value.toInt()
-                val zkClient = CuratorFrameworkFactory.builder()
-                        .connectString(DbConfig.get().zkNode.value())
-                        .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
-                        .sessionTimeoutMs(nodeRefreshIntervalMs)
-                        .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
-                        .namespace(Constant.APPLICATION_ID)
-                        .build()
+        val nodeRefreshIntervalMs = config.nodeSessionTimeoutMs
+        zkClient = CuratorFrameworkFactory.builder()
+                .connectString(config.zkNode)
+                .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
+                .sessionTimeoutMs(nodeRefreshIntervalMs)
+                .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
+                .namespace(Constant.APPLICATION_ID)
+                .build()
 
-                zkClient.start()
+        zkClient.start()
 
-                log.info(logMessage.success())
-                return zkClient
-            }
-        })
-    }
-
-    fun initCurrentServerNode() {
-        val item = DbConfig.get().iiaNodes.find {
-            it.configItemId == LocalConfig.get().nodeId
-        }
-
-        ApplicationErrorCode.ILLEGAL_PARAM.isNotEmpty(item,
-                "Can't find server node in db(nodeId=${LocalConfig.get().nodeId})")
-
-        val (ip, port) = item!!.value.split(":")
-        currentServerNode = ServerNode(item.configItemId, ip, port.toInt())
-    }
-
-    fun initManager() {
-        register(OnlineServerNodeManager(get(CuratorFramework::class.java)))
-        register(ServerNodeRouter())
+        log.info(logMessage.success())
     }
 }

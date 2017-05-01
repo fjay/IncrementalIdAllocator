@@ -1,6 +1,7 @@
 package com.asiainfo.iia.server.api.http
 
 import com.asiainfo.common.util.IoUtil
+import com.asiainfo.iia.server.ApplicationContext
 import org.team4u.fhs.server.HttpServer
 import org.team4u.fhs.server.impl.netty.NettyHttpServer
 import org.team4u.fhs.server.impl.netty.NettyHttpServerConfig
@@ -24,7 +25,8 @@ class IdAllocatorHttpServer(val port: Int) : Closeable {
         val pool = ThreadPoolExecutor(5, 50, 0L, TimeUnit.MILLISECONDS, LinkedTransferQueue<Runnable>());
 
         val router = DefaultHttpRouter()
-                .addLastHandlerMapping(RequestMappingHandlerMapping().addController(IdAllocatorController()))
+                .addLastHandlerMapping(RequestMappingHandlerMapping()
+                        .addController(ApplicationContext.ioc.get(IdAllocatorController::class.java)))
                 .addFirstViewResolver(FastJsonViewResolver())
 
         server = NettyHttpServer(NettyHttpServerConfig().setRequestThreadPool(pool))

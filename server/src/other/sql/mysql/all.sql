@@ -29,16 +29,17 @@ CREATE TABLE config_item
 
 
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'ID_ALLOCATOR_POOL_SIZE', NULL, 'COMMON', '1', '1000', 'ID分配器缓存池', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'ID_ALLOCATOR_POOL_SIZE', NULL, 'COMMON', '1', '1000', 'ID分配器缓存池', NULL, NULL, NULL);
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'IIA_0', NULL, 'IIA_NODES', '1', '127.0.0.1:7001', 'IIA节点服务器', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'IIA_0', NULL, 'IIA_NODES', '1', '127.0.0.1:7001', 'IIA节点服务器', NULL, NULL, NULL);
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'IIA_1', NULL, 'IIA_NODES', '1', '127.0.0.1:7000', 'IIA节点服务器', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'IIA_1', NULL, 'IIA_NODES', '1', '127.0.0.1:7000', 'IIA节点服务器', NULL, NULL, NULL);
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'MAX_SEGMENT_SIZE', NULL, 'COMMON', '1', '50000', '最大分段数量', NULL, '2017-04-27', NULL);
+VALUES ('DEFAULT', 'IIA', 'MAX_SEGMENT_SIZE', NULL, 'COMMON', '1', '50000', '最大分段数量', NULL, NULL, NULL);
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
 VALUES
-  ('DEFAULT', 'IIA', 'NODE_SESSION_TIMEOUT_MS', NULL, 'COMMON', '1', '3000', '节点Session有效期（毫秒）', NULL, '2017-04-27',
+  ('DEFAULT', 'IIA', 'NODE_SESSION_TIMEOUT_MS', NULL, 'COMMON', '1', '3000', 'IIA节点Session有效期（毫秒）', NULL, NULL,
               NULL);
 INSERT INTO config_item (profile_id, client_id, config_item_id, parent_item_id, config_type_id, enabled, value, description, sequence_no, created_date, last_updated_date)
-VALUES ('DEFAULT', 'IIA', 'ZK_NODE', NULL, 'COMMON', '1', '127.0.0.1:2181', 'zookeeper地址', NULL, '2017-04-27', NULL);
+VALUES
+  ('DEFAULT', 'IIA', 'ZK_NODE', NULL, 'COMMON', '1', '127.0.0.1:2181', 'zookeeper节点信息，多个节点采用逗号隔开', NULL, NULL, NULL);

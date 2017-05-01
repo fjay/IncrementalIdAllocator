@@ -32,7 +32,6 @@ IdAllocatorClient client = new IdAllocatorClient(CollectionUtil.arrayListOf(
 Long id = client.alloc("bizType1")
 ```
 
-
 ## 服务端
 
 ### ENVIRONMENT
@@ -40,14 +39,6 @@ Long id = client.alloc("bizType1")
 * JDK 7+
 * Mysql 5+
 * ZooKeeper 3.4+
-
-### 初始化数据库
-
-创建数据库并执行以下脚本：
-
-```
-server/src/other/sql/mysql/all.sql
-```
 
 ### 打包安装
 
@@ -60,7 +51,7 @@ mvn clean install -Pproduction -Dmaven.test.skip=true
 
 将server/target/incremental-id-allocator-server-xxx-bin/incremental-id-allocator-server-xxx文件夹复制到目标路径
 
-### 调整日志与数据源
+### 日志配置
 
 log4j.properties
 
@@ -70,25 +61,68 @@ log4j.appender.logfile.File=${log4j.logfile}
 log4j.logger.com.asiainfo.iia=${log4j.level}
 ```
 
-config.js：
+### 节点配置
 
-```java
-var conf = {
-    // 节点标识，需要与config_item中的config_item_id一致
-    nodeId: "IIA_0",
-    // 数据库配置
-    dataSource: {
-        url: '${database.url}',
-        username: '${database.username}',
-        password: '${database.password}'
-        ...
-    }
-};
+节点有两种配置模式，一种为数据库配置模式，即所有配置从数据库加载，另一种为本地配置模式，即通过本地配置文件方式加载。
+
+本地模式适合部署单一节点，建议只用于调试开发，数据库模式适合同时部署多个节点，推荐生产环境使用。
+
+注意，两种模式不能共存，只能二选一。
+
+#### 数据库配置模式
+
+创建数据库并执行以下脚本：
+
+```
+server/src/other/sql/mysql/all.sql
 ```
 
-### 调整配置项
-
 所有配置项位于数据库中的config_item表，请根据值备注进行实际调整。
+
+调整config.js：
+
+```json
+var conf = {
+    serverConfig: {
+            fields: {
+                // 节点标识，需要与config_item中的config_item_id一致
+                nodeId: "IIA_0",
+                // 数据库配置
+                dataSource: {
+                    fields: {
+                        url: '${database.url}',
+                        username: '${database.username}',
+                        password: '${database.password}',
+                        ...
+                    }
+                }
+            }
+        }
+}
+```
+
+#### 本地配置模式
+
+调整config.js：
+
+```json
+var conf = {
+    serverConfig: {
+        fields: {
+            // IIA本机节点信息
+            node: "127.0.0.1:7000",
+            // zookeeper节点信息，多个节点采用逗号隔开
+            zkNode: "127.0.0.1:2181",
+            // 最大分段数量
+            maxSegmentSize: 2,
+            // ID分配器缓存池
+            idAllocatorPoolSize: 1,
+            // IIA节点Session有效期（毫秒）
+            nodeSessionTimeoutMs: 3000
+        }
+    }
+}
+```
 
 ### 运行服务
 

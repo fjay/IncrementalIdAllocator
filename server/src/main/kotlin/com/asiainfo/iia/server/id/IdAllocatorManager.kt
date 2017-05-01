@@ -5,9 +5,7 @@ import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
-import com.asiainfo.iia.server.DbConfig
 import com.asiainfo.iia.server.node.ServerNodeRouter
-import org.apache.curator.framework.CuratorFramework
 import java.util.*
 
 /**
@@ -27,8 +25,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
         val addKeys = newKeys - oldKeys
         addKeys.forEach {
             register(IdAllocator(it,
-                    DbConfig.get().idAllocatorPoolSize.value.toInt(),
-                    ApplicationContext.get(CuratorFramework::class.java)))
+                    ApplicationContext.config.idAllocatorPoolSize,
+                    ApplicationContext.zkClient))
         }
 
         val removeKeys = oldKeys - newKeys
@@ -44,8 +42,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
 
     fun accept(key: Int): Boolean {
         return enabled &&
-                ApplicationContext.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
-                        ApplicationContext.currentServerNode.getIpAndPort()
+                ApplicationContext.ioc.get(ServerNodeRouter::class.java).serverNodeRoute.getServerNode(key) ==
+                        ApplicationContext.config.serverNode.toString()
     }
 
     fun alloc(key: Int): Long? {
@@ -57,6 +55,6 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     }
 
     private fun getCurrentServerNodeKeys(route: ServerNodeRoute): Set<Int> {
-        return route.serverNodeAndKeys[ApplicationContext.currentServerNode.getIpAndPort()] ?: Collections.emptySet<Int>()
+        return route.serverNodeAndKeys[ApplicationContext.config.serverNode.toString()] ?: Collections.emptySet()
     }
 }

@@ -6,6 +6,7 @@ import com.asiainfo.common.util.TimerUtil
 import com.asiainfo.common.util.log.LogMessage
 import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.server.api.http.IdAllocatorHttpServer
+import com.asiainfo.iia.server.node.OnlineServerNodeManager
 import org.apache.log4j.PropertyConfigurator
 import java.io.Closeable
 
@@ -37,7 +38,7 @@ object IdAllocatorServer : Closeable {
             start()
 
             log.info(logMessage
-                    .append("node", ApplicationContext.currentServerNode)
+                    .append("node", ApplicationContext.config.serverNode)
                     .success())
         } catch (e: Throwable) {
             log.error(logMessage.fail(e.message), e)
@@ -50,7 +51,7 @@ object IdAllocatorServer : Closeable {
 
         ApplicationContext.initialize()
 
-        httpServer = IdAllocatorHttpServer(ApplicationContext.currentServerNode.port).start();
+        httpServer = IdAllocatorHttpServer(ApplicationContext.config.serverNode.port).start();
     }
 
     override fun close() {
@@ -58,7 +59,9 @@ object IdAllocatorServer : Closeable {
 
         IoUtil.safeClose(httpServer)
         TimerUtil.depose()
-        ApplicationContext.close()
+
+        IoUtil.safeClose(ApplicationContext.ioc.get(OnlineServerNodeManager::class.java))
+        IoUtil.safeClose(ApplicationContext.zkClient)
 
         log.info(LogMessage("IdAllocatorServer", "close").success())
     }

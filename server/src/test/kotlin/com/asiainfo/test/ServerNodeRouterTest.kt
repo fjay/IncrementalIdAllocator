@@ -15,7 +15,7 @@ class ServerNodeRouterTest {
     fun loadOnlineServerNodes() {
         ApplicationContext.initialize()
 
-        val manager = ApplicationContext.get(OnlineServerNodeManager::class.java)
+        val manager = ApplicationContext.ioc.get(OnlineServerNodeManager::class.java)
         Assert.assertEquals("[IIA_0:127.0.0.1:7000]", manager.loadOnlineServerNodes().toString())
     }
 
@@ -23,7 +23,7 @@ class ServerNodeRouterTest {
     fun getServerNodeRouter() {
         ApplicationContext.initialize()
 
-        val router = ApplicationContext.get(ServerNodeRouter::class.java)
+        val router = ApplicationContext.ioc.get(ServerNodeRouter::class.java)
 
         Assert.assertEquals("{127.0.0.1:7000=[0, 1, 2]}",
                 router.serverNodeRoute.serverNodeAndKeys.toString())

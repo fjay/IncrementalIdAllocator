@@ -82,23 +82,21 @@ server/src/other/sql/mysql/all.sql
 调整config.js：
 
 ```json
-{
-    serverConfig: {
+serverConfig: {
+    fields: {
+        // 节点标识，需要与config_item中的config_item_id一致
+        nodeId: "IIA_0",
+        // 数据库配置
+        dataSource: {
             fields: {
-                // 节点标识，需要与config_item中的config_item_id一致
-                nodeId: "IIA_0",
-                // 数据库配置
-                dataSource: {
-                    fields: {
-                        url: '${database.url}',
-                        username: '${database.username}',
-                        password: '${database.password}',
-                        ...
-                    }
-                }
+                url: '${database.url}',
+                username: '${database.username}',
+                password: '${database.password}',
+                ...
             }
         }
-}
+    }
+ }
 ```
 
 #### 本地配置模式
@@ -106,20 +104,18 @@ server/src/other/sql/mysql/all.sql
 调整config.js：
 
 ```json
-{
-    serverConfig: {
-        fields: {
-            // IIA本机节点信息
-            node: "127.0.0.1:7000",
-            // zookeeper节点信息，多个节点采用逗号隔开
-            zkNode: "127.0.0.1:2181",
-            // 最大分段数量
-            maxSegmentSize: 2,
-            // ID分配器缓存池
-            idAllocatorPoolSize: 1,
-            // IIA节点Session有效期（毫秒）
-            nodeSessionTimeoutMs: 3000
-        }
+serverConfig: {
+    fields: {
+        // IIA本机节点信息
+        node: "127.0.0.1:7000",
+        // zookeeper节点信息，多个节点采用逗号隔开
+        zkNode: "127.0.0.1:2181",
+        // 最大分段数量
+        maxSegmentSize: 2,
+        // ID分配器缓存池
+        idAllocatorPoolSize: 1,
+        // IIA节点Session有效期（毫秒）
+        nodeSessionTimeoutMs: 3000
     }
 }
 ```

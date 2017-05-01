@@ -111,9 +111,9 @@ serverConfig: {
         // zookeeper节点信息，多个节点采用逗号隔开
         zkNode: "127.0.0.1:2181",
         // 最大分段数量
-        maxSegmentSize: 2,
+        maxSegmentSize: 50000,
         // ID分配器缓存池
-        idAllocatorPoolSize: 1,
+        idAllocatorPoolSize: 1000,
         // IIA节点Session有效期（毫秒）
         nodeSessionTimeoutMs: 3000
     }

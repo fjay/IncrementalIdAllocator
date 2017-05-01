@@ -51,7 +51,7 @@ git clone ${URL}
 mvn clean install -Pproduction -Dmaven.test.skip=true
 ```
 
-将server/target/incremental-id-allocator-server-xxx-bin/incremental-id-allocator-server-xxx文件夹复制到目标路径
+将server/target/incremental-id-allocator-server-x.x.x-bin/incremental-id-allocator-server-x.x.x文件夹复制到目标路径
 
 ### 日志配置
 
@@ -137,7 +137,7 @@ sh start.sh start
 Windows或者Linux执行以下命令（前台运行）：
 
 ```shell
-java -jar incremental-id-allocator-server-1.0.0.jar
+java -jar incremental-id-allocator-server-x.x.x.jar
 ```
 
 END

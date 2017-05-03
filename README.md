@@ -42,9 +42,6 @@ IdAllocatorClient client = new IdAllocatorClient(new SimpleClientConfig()
     .setServerHosts(CollectionUtil.arrayListOf(
             "127.0.0.1:7001", "127.0.0.1:7000"
     )));
-
-// 传入分类标识
-Long id = client.alloc("bizType1")
 ```
 
 ```java
@@ -61,9 +58,18 @@ CuratorFramework zkClient = CuratorFrameworkFactory.builder()
 zkClient.start();
 
 IdAllocatorClient client = new IdAllocatorClient(new ZkClientConfig(zkClient));
+```
 
-// 传入分类标识
+
+```java
+// 传入分类标识进行id分配
 Long id = client.alloc("bizType1")
+```
+
+
+```java
+// 关闭客户端
+client.close()
 ```
 
 ## 服务端

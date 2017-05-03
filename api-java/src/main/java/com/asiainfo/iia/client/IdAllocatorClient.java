@@ -10,10 +10,13 @@ import com.asiainfo.common.util.policy.RoundRobinPolicy;
 import com.asiainfo.iia.common.model.AllocResponse;
 import com.asiainfo.iia.common.model.ServerNodeRoute;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
  * @author Jay Wu
  */
-public class IdAllocatorClient {
+public class IdAllocatorClient implements Closeable {
 
     private Log log = Logs.get();
 
@@ -111,5 +114,10 @@ public class IdAllocatorClient {
 
             return content;
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        IoUtil.safeClose(clientConfig);
     }
 }

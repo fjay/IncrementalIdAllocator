@@ -1,5 +1,6 @@
 package com.asiainfo.iia.client;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,5 +30,9 @@ public class SimpleClientConfig implements ClientConfig {
     public SimpleClientConfig setRequestTimeoutMs(int requestTimeoutMs) {
         this.requestTimeoutMs = requestTimeoutMs;
         return this;
+    }
+
+    @Override
+    public void close() throws IOException {
     }
 }

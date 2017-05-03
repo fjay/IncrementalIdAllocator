@@ -2,7 +2,7 @@ package com.asiainfo.iia.server.config
 
 import com.asiainfo.common.kotlin.extension.isNotEmpty
 import com.asiainfo.conf.client.loader.DbConfigItemLoader
-import com.asiainfo.conf.client.loader.InMemoryConfigItemLoader
+import com.asiainfo.conf.client.loader.InMemoryCacheConfigItemLoader
 import com.asiainfo.conf.common.entity.ConfigItem
 import com.asiainfo.iia.server.ApplicationErrorCode
 import com.asiainfo.iia.server.model.ServerNode
@@ -20,8 +20,8 @@ class DbServerConfig() : ServerConfig {
 
     lateinit var dataSource: DataSource
 
-    private val client: InMemoryConfigItemLoader by lazy {
-        val loader = InMemoryConfigItemLoader(
+    private val client: InMemoryCacheConfigItemLoader by lazy {
+        val loader = InMemoryCacheConfigItemLoader(
                 DbConfigItemLoader(namespace, "DEFAULT", dataSource)
         )
 

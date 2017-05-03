@@ -20,15 +20,47 @@ IncrementalIdAllocator为轻量级的分布式增长ID生成器，包含以下�
     <artifactId>incremental-id-allocator-client</artifactId>
     <version>1.0.0</version>
 </dependency>
+
+<!-- ZkClientConfig依赖包 -->
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
+    <version>3.4.10</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-recipes</artifactId>
+    <version>2.12.0</version>
+</dependency>
 ```
 
 使用代码示例：
 
 ```java
-// 传入所有节点服务器
-IdAllocatorClient client = new IdAllocatorClient(CollectionUtil.arrayListOf(
+// 使用手工传入所有节点服务器
+IdAllocatorClient client = new IdAllocatorClient(new SimpleClientConfig()
+    .setServerHosts(CollectionUtil.arrayListOf(
             "127.0.0.1:7001", "127.0.0.1:7000"
-    ));
+    )));
+
+// 传入分类标识
+Long id = client.alloc("bizType1")
+```
+
+```java
+// 使用ZooKeeper自动获取所有节点服务器
+
+CuratorFramework zkClient = CuratorFrameworkFactory.builder()
+        .connectString("127.0.0.1:2181")
+        .connectionTimeoutMs(2000)
+        .sessionTimeoutMs(3000)
+        .retryPolicy(new ExponentialBackoffRetry(3000, 10))
+        .namespace("IIA")
+        .build();
+
+zkClient.start();
+
+IdAllocatorClient client = new IdAllocatorClient(new ZkClientConfig(zkClient));
 
 // 传入分类标识
 Long id = client.alloc("bizType1")

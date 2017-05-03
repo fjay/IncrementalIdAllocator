@@ -10,8 +10,6 @@ import com.asiainfo.common.util.policy.RoundRobinPolicy;
 import com.asiainfo.iia.common.model.AllocResponse;
 import com.asiainfo.iia.common.model.ServerNodeRoute;
 
-import java.util.List;
-
 /**
  * @author Jay Wu
  */
@@ -22,16 +20,10 @@ public class IdAllocatorClient {
     private ServerNodeRoute route = new ServerNodeRoute();
     private RoundRobinPolicy<String> roundRobinPolicy = new RoundRobinPolicy<String>();
 
-    private List<String> hosts;
-    private int requestTimeoutMs;
+    private ClientConfig clientConfig;
 
-    public IdAllocatorClient(List<String> hosts) {
-        this(hosts, 5000);
-    }
-
-    public IdAllocatorClient(List<String> hosts, int requestTimeoutMs) {
-        this.hosts = hosts;
-        this.requestTimeoutMs = requestTimeoutMs;
+    public IdAllocatorClient(ClientConfig clientConfig) {
+        this.clientConfig = clientConfig;
 
         initServerNodeRoute();
     }
@@ -51,21 +43,12 @@ public class IdAllocatorClient {
         }
     }
 
-    public List<String> getHosts() {
-        return hosts;
-    }
-
-    public IdAllocatorClient setHosts(List<String> hosts) {
-        this.hosts = hosts;
-        return this;
-    }
-
     private Long tryAllocOnce(String type) {
         int key = Math.abs(type.hashCode()) % route.getMaxSegmentSize();
         String host = route.getServerNode(key);
         Response response = HttpRequester.create()
                 .setUrl("http://" + host + "/id/alloc")
-                .setTimeout(requestTimeoutMs)
+                .setTimeout(clientConfig.getRequestTimeoutMs())
                 .putUrlParam("key", key)
                 .putUrlParam("version", route.getVersion())
                 .get();
@@ -82,12 +65,12 @@ public class IdAllocatorClient {
     }
 
     private synchronized void initServerNodeRoute() {
-        roundRobinPolicy.request(hosts, new Callback<String>() {
+        roundRobinPolicy.request(clientConfig.getServerHosts(), new Callback<String>() {
             @Override
             public void invoke(String host) {
                 Response response = HttpRequester.create()
                         .setUrl("http://" + host + "/id/route")
-                        .setTimeout(requestTimeoutMs)
+                        .setTimeout(clientConfig.getRequestTimeoutMs())
                         .putUrlParam("version", route.getVersion())
                         .get();
 

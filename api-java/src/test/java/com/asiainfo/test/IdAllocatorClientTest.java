@@ -1,8 +1,11 @@
 package com.asiainfo.test;
 
-import com.asiainfo.common.util.CollectionUtil;
 import com.asiainfo.common.util.debug.Benchmark;
 import com.asiainfo.iia.client.IdAllocatorClient;
+import com.asiainfo.iia.client.ZkClientConfig;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.junit.Test;
 
 /**
@@ -10,9 +13,7 @@ import org.junit.Test;
  */
 public class IdAllocatorClientTest {
 
-    private IdAllocatorClient client = new IdAllocatorClient(CollectionUtil.arrayListOf(
-            "127.0.0.1:7000", "127.0.0.1:7001"
-    ));
+    private IdAllocatorClient client = new IdAllocatorClient(new ZkClientConfig(newZkClient()));
 
     @Test
     public void alloc() {
@@ -27,5 +28,18 @@ public class IdAllocatorClientTest {
                 client.alloc("b");
             }
         });
+    }
+
+    private CuratorFramework newZkClient() {
+        CuratorFramework zkClient = CuratorFrameworkFactory.builder()
+                .connectString("127.0.0.1:2181")
+                .connectionTimeoutMs(2000)
+                .sessionTimeoutMs(3000)
+                .retryPolicy(new ExponentialBackoffRetry(3000, 10))
+                .namespace("IIA")
+                .build();
+
+        zkClient.start();
+        return zkClient;
     }
 }

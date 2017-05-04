@@ -24,13 +24,14 @@ public class ZkClientConfig implements ClientConfig {
 
     private List<String> loadOnlineServerHosts() {
         try {
-            return CollectionUtil.collect(zkClient.getChildren().forPath(ONLINE_SERVER_NODE_PATH), new Function<String, String>() {
-                @Override
-                public String invoke(String path) {
-                    String[] ipAndPort = CollectionUtil.last(path.split("/")).split(":");
-                    return ipAndPort[0] + ":" + ipAndPort[1];
-                }
-            });
+            return CollectionUtil.collect(zkClient.getChildren().forPath(ONLINE_SERVER_NODE_PATH),
+                    new Function<String, String>() {
+                        @Override
+                        public String invoke(String path) {
+                            String[] ipAndPort = CollectionUtil.last(path.split("/")).split(":");
+                            return ipAndPort[0] + ":" + ipAndPort[1];
+                        }
+                    });
         } catch (Exception e) {
             throw new IdAllocatorClientException(ClientErrorCode.REQUEST_ERROR.name(), e);
         }

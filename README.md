@@ -150,7 +150,7 @@ serverConfig: {
     fields: {
         // 命名空间
         namespace: "IIA",
-        // IIA本机节点信息
+        // 本机IIA节点信息
         node: "127.0.0.1:7000",
         // zookeeper节点信息，多个节点采用逗号隔开
         zkNode: "127.0.0.1:2181",
@@ -158,7 +158,7 @@ serverConfig: {
         maxSegmentSize: 50000,
         // ID分配器缓存池
         idAllocatorPoolSize: 1000,
-        // IIA节点Session有效期（毫秒）
+        // IIA节点Session超时时间（毫秒），超时即认为节点下线
         nodeSessionTimeoutMs: 3000
     }
 }

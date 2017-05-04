@@ -12,7 +12,7 @@ class IdAllocator(val segmentKey: Int,
                   val poolSize: Int,
                   client: CuratorFramework) : Registrar.Applicant<Int> {
 
-    private val counter = DistributedAtomicLong(client, "/nodeId/$segmentKey", ExponentialBackoffRetry(1000, 0))
+    private val counter = DistributedAtomicLong(client, "/id_segment/$segmentKey", ExponentialBackoffRetry(1000, 0))
 
     private var currentSeq: Long = 1
     private var nextMaxSeq: Long = 0

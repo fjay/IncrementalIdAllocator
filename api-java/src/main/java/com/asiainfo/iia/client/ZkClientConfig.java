@@ -2,48 +2,42 @@ package com.asiainfo.iia.client;
 
 import com.asiainfo.common.util.CollectionUtil;
 import com.asiainfo.common.util.Function;
-import com.asiainfo.common.util.IoUtil;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.cache.ChildData;
-import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
 /**
  * @author Jay Wu
  */
-public class ZkClientConfig implements ClientConfig, Closeable {
+public class ZkClientConfig implements ClientConfig {
 
-    private static final String ONLINE_SERVER_NODE_PATH = "/onlineServerNodes";
+    private static final String ONLINE_SERVER_NODE_PATH = "/online_server_nodes";
 
-    private PathChildrenCache onlinePathCache;
+    private CuratorFramework zkClient;
 
-    private int requestTimeoutMs = 5000;
+    private int requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT_MS;
 
     public ZkClientConfig(CuratorFramework zkClient) {
-        onlinePathCache = new PathChildrenCache(zkClient, ONLINE_SERVER_NODE_PATH, false);
+        this.zkClient = zkClient;
+    }
+
+    private List<String> loadOnlineServerHosts() {
         try {
-            onlinePathCache.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE);
+            return CollectionUtil.collect(zkClient.getChildren().forPath(ONLINE_SERVER_NODE_PATH), new Function<String, String>() {
+                @Override
+                public String invoke(String path) {
+                    String[] ipAndPort = CollectionUtil.last(path.split("/")).split(":");
+                    return ipAndPort[0] + ":" + ipAndPort[1];
+                }
+            });
         } catch (Exception e) {
             throw new IdAllocatorClientException(ClientErrorCode.REQUEST_ERROR.name(), e);
         }
     }
 
-    private List<String> loadOnlineServerHosts() {
-        return CollectionUtil.collect(onlinePathCache.getCurrentData(), new Function<ChildData, String>() {
-            @Override
-            public String invoke(ChildData data) {
-                String[] ipAndPort = CollectionUtil.last(data.getPath().split("/")).split(":");
-                return ipAndPort[0] + ":" + ipAndPort[1];
-            }
-        });
-    }
-
     @Override
     public void close() throws IOException {
-        IoUtil.safeClose(onlinePathCache);
     }
 
     @Override

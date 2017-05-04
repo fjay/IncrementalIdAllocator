@@ -17,7 +17,7 @@ import java.util.*
 class OnlineServerNodeManager : Closeable {
 
     companion object {
-        private val ONLINE_SERVER_NODE_PATH = "/onlineServerNodes"
+        private val ONLINE_SERVER_NODE_PATH = "/online_server_nodes"
     }
 
     private var onlinePathCache: PathChildrenCache? = null

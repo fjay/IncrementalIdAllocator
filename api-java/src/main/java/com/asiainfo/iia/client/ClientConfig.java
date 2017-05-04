@@ -8,6 +8,8 @@ import java.util.List;
  */
 public interface ClientConfig extends Closeable {
 
+    int DEFAULT_REQUEST_TIMEOUT_MS = 5000;
+
     List<String> getServerHosts();
 
     int getRequestTimeoutMs();

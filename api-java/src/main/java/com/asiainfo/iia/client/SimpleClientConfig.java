@@ -10,7 +10,7 @@ public class SimpleClientConfig implements ClientConfig {
 
     private List<String> serverHosts;
 
-    private int requestTimeoutMs = 5000;
+    private int requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT_MS;
 
     @Override
     public List<String> getServerHosts() {

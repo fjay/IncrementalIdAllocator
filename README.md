@@ -172,10 +172,10 @@ Linux下执行以下命令（后台运行）：
 sh start.sh start
 ```
 
-Windows或者Linux执行以下命令（前台运行）：
+Windows执行以下命令（前台运行）：
 
 ```shell
-java -jar incremental-id-allocator-server-x.x.x.jar
+start.bat
 ```
 
 END

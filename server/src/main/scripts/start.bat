@@ -1,1 +1,1 @@
-java -jar incremental-id-allocator-server-1.0.0.jar
+java -jar -Dfile.encoding=UTF-8 incremental-id-allocator-server-1.0.0.jar

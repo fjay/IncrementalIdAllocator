@@ -20,7 +20,7 @@ class IdAllocator(val segmentKey: Int,
 
     private val log = Logs.get()
 
-    private val counter: LongGenerator by lazy { LongGenerator("/id_segment/$segmentKey", 0) }
+    private val counter by lazy { LongGenerator("/id_segment/$segmentKey", 0) }
 
     private var currentSeq: Long = 1
     private var nextMaxSeq: Long = 0

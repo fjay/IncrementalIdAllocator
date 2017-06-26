@@ -15,15 +15,21 @@ class IdAllocatorTest {
     fun alloc() {
         ApplicationContext.initialize()
         val segmentKey = -1
-        try {
-            ApplicationContext.zkClient.delete().deletingChildrenIfNeeded().forPath("/id_segment/$segmentKey")
-        } catch (e: KeeperException.NoNodeException) {
-            // Ignore error
-        }
+        clearNode("/id_segment/$segmentKey")
 
         val allocator = IdAllocator(segmentKey, 2, ApplicationContext.zkClient)
         Assert.assertEquals(allocator.alloc(), 1L)
         Assert.assertEquals(allocator.alloc(), 2L)
         Assert.assertEquals(allocator.alloc(), 3L)
+
+        clearNode("/id_segment/$segmentKey")
+    }
+
+    private fun clearNode(path: String) {
+        try {
+            ApplicationContext.zkClient.delete().deletingChildrenIfNeeded().forPath(path)
+        } catch (e: KeeperException.NoNodeException) {
+            // Ignore error
+        }
     }
 }

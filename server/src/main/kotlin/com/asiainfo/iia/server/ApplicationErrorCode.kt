@@ -6,6 +6,7 @@ import com.asiainfo.common.util.ErrorCode
 enum class ApplicationErrorCode(private val code: String,
                                 private val message: String) : ErrorCode {
     ILLEGAL_PARAM("20000", "Illegal Param:%s"),
+    INIT_REMOTE_VALUE_TIMEOUT("30000", "Init remote value timeout"),
 
     SYS_ERROR("-1", "Internal Server Error");
 

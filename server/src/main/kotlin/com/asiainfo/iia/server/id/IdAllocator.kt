@@ -65,25 +65,30 @@ class IdAllocator(val segmentKey: Int,
         }
 
         private fun initRemoteValue() {
-            client.sync()
-                    .inBackground { client, event ->
-                        val data = try {
-                            client.data.forPath(nodePath)
-                        } catch (e: KeeperException.NoNodeException) {
-                            null
-                        }
+            client.sync().inBackground { client, event ->
+                val data = try {
+                    client.data.forPath(nodePath)
+                } catch (e: KeeperException.NoNodeException) {
+                    null
+                } catch (e: Exception) {
+                    log.error(LogMessage(this.javaClass.simpleName, "sync")
+                            .fail()
+                            .append("nodePath", counter.nodePath)
+                            .append("currentSeq", currentSeq), e)
+                    remoteValue.finish(null)
+                    return@inBackground
+                }
 
-                        remoteValue.finish(if (data == null) {
-                            client.create().creatingParentContainersIfNeeded().forPath(
-                                    nodePath,
-                                    CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.encode(initValue)
-                            )
-                            initValue
-                        } else {
-                            CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.decode(data)
-                        })
-                    }
-                    .forPath(nodePath)
+                remoteValue.finish(if (data == null) {
+                    client.create().creatingParentContainersIfNeeded().forPath(
+                            nodePath,
+                            CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.encode(initValue)
+                    )
+                    initValue
+                } else {
+                    CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.decode(data)
+                })
+            }.forPath(nodePath)
         }
     }
 }

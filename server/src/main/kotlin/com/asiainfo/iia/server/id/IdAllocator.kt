@@ -71,10 +71,9 @@ class IdAllocator(val segmentKey: Int,
                 } catch (e: KeeperException.NoNodeException) {
                     null
                 } catch (e: Exception) {
-                    log.error(LogMessage(this.javaClass.simpleName, "sync")
+                    log.error(LogMessage(this.javaClass.simpleName, "initRemoteValue")
                             .fail()
-                            .append("nodePath", counter.nodePath)
-                            .append("currentSeq", currentSeq), e)
+                            .append("nodePath", nodePath), e)
                     remoteValue.finish(null)
                     return@inBackground
                 }

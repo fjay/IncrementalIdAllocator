@@ -1,6 +1,5 @@
 package com.asiainfo.iia.server.id
 
-import com.asiainfo.common.util.Registrar
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.recipes.atomic.DistributedAtomicLong
 import org.apache.curator.retry.ExponentialBackoffRetry

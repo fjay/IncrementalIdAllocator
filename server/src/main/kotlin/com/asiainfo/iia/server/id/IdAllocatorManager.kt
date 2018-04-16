@@ -1,11 +1,10 @@
 package com.asiainfo.iia.server.id
 
-import com.asiainfo.common.util.Registrar
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
+import cn.hutool.log.LogFactory
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.node.ServerNodeRouter
+import org.team4u.kit.core.log.LogMessage
 import java.util.*
 
 /**
@@ -16,7 +15,7 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
     var enabled = true
         set
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     private val serverNodeRouter = ApplicationContext.ioc.get(ServerNodeRouter::class.java)
 
@@ -36,7 +35,8 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
             unregister(it)
         }
 
-        log.info(LogMessage("IdAllocatorManager", "buildIdAllocators")
+        log.info(
+            LogMessage("IdAllocatorManager", "buildIdAllocators")
                 .append("addKeys", addKeys.size)
                 .append("removeKeys", removeKeys.size)
                 .success())

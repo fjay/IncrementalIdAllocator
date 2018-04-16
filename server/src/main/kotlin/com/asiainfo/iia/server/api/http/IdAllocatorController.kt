@@ -1,19 +1,17 @@
 package com.asiainfo.iia.server.api.http;
 
+import cn.hutool.log.LogFactory
 import com.asiainfo.common.kotlin.extension.isNotEmpty
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.common.model.AllocResponse
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationErrorCode
 import com.asiainfo.iia.server.id.IdAllocatorManager
 import com.asiainfo.iia.server.node.ServerNodeRouter
-import org.nutz.ioc.loader.annotation.Inject
-import org.nutz.ioc.loader.annotation.IocBean
 import org.team4u.fhs.web.handler.method.annotation.Controller
 import org.team4u.fhs.web.handler.method.annotation.RequestMapping
 import org.team4u.fhs.web.handler.method.annotation.RequestParam
 import org.team4u.fhs.web.handler.method.annotation.ResponseView
+import org.team4u.kit.core.log.LogMessage
 
 /**
  *
@@ -23,7 +21,7 @@ import org.team4u.fhs.web.handler.method.annotation.ResponseView
 @Controller("/id")
 class IdAllocatorController {
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     @Inject
     private lateinit var serverNodeRouter: ServerNodeRouter
@@ -34,20 +32,26 @@ class IdAllocatorController {
         ApplicationErrorCode.ILLEGAL_PARAM.isNotEmpty(key, "key")
 
         if (log.isDebugEnabled) {
-            log.debug(LogMessage("IdAllocatorController", "alloc")
+            log.debug(
+                LogMessage("IdAllocatorController", "alloc")
                     .processing()
                     .append("key", key)
-                    .append("version", version))
+                    .append("version", version)
+                    .toString()
+            )
         }
 
         val id = IdAllocatorManager.alloc(key!!)
 
         if (log.isDebugEnabled) {
-            log.debug(LogMessage("IdAllocatorController", "alloc")
+            log.debug(
+                LogMessage("IdAllocatorController", "alloc")
                     .success()
                     .append("key", key)
                     .append("version", version)
-                    .append("id", id))
+                    .append("id", id)
+                    .toString()
+            )
         }
 
         return AllocResponse().apply {

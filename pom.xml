@@ -9,6 +9,13 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.1.RELEASE</version>
+        <relativePath/>
+    </parent>
+
     <properties>
         <common.version>1.0.0</common.version>
         <api.version>1.0.0</api.version>
@@ -100,25 +107,27 @@
 
     <repositories>
         <repository>
-            <id>nexus</id>
-            <url>http://gz.maven.asiainfo.com:8080/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
+            <id>aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>bintray-team4u</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/team4u/team4u</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>getui-nexus</id>
+            <url>http://mvn.gt.igexin.com/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
 
-    <distributionManagement>
-        <repository>
-            <id>deploymentRepo</id>
-            <url>http://gz.maven.asiainfo.com:8080/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deploymentRepo</id>
-            <url>http://gz.maven.asiainfo.com:8080/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

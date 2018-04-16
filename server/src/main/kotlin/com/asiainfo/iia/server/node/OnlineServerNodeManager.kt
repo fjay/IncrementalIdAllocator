@@ -1,12 +1,11 @@
 package com.asiainfo.iia.server.node
 
-import com.asiainfo.common.util.IoUtil
+import cn.hutool.core.io.IoUtil
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.model.ServerNode
 import org.apache.curator.framework.recipes.cache.PathChildrenCache
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
 import org.apache.zookeeper.CreateMode
-import org.nutz.ioc.loader.annotation.IocBean
 import java.io.Closeable
 import java.util.*
 
@@ -27,9 +26,9 @@ class OnlineServerNodeManager : Closeable {
         val nodePath = "$ONLINE_SERVER_NODE_PATH/$node"
 
         ApplicationContext.zkClient.create()
-                .creatingParentsIfNeeded()
-                .withMode(CreateMode.EPHEMERAL)
-                .forPath(nodePath)
+            .creatingParentsIfNeeded()
+            .withMode(CreateMode.EPHEMERAL)
+            .forPath(nodePath)
 
         onlinePathCache = PathChildrenCache(ApplicationContext.zkClient, ONLINE_SERVER_NODE_PATH, false)
         onlinePathCache?.listenable?.addListener(listener)
@@ -44,6 +43,6 @@ class OnlineServerNodeManager : Closeable {
     }
 
     override fun close() {
-        IoUtil.safeClose(onlinePathCache)
+        IoUtil.close(onlinePathCache)
     }
 }

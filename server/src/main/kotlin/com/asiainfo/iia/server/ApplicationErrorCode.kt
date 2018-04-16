@@ -1,13 +1,12 @@
 package com.asiainfo.iia.server
 
-import com.asiainfo.common.ServiceException
-import com.asiainfo.common.util.ErrorCode
+import org.team4u.kit.core.error.ErrorCode
 
-enum class ApplicationErrorCode(private val code: String,
-                                private val message: String) : ErrorCode {
-    ILLEGAL_PARAM("20000", "Illegal Param:%s"),
 
-    SYS_ERROR("-1", "Internal Server Error");
+class ApplicationErrorCode(
+    private val code: String,
+    private val message: String
+) : ErrorCode("app", code, message) {
 
     override fun getMessage(): String {
         return message
@@ -17,7 +16,10 @@ enum class ApplicationErrorCode(private val code: String,
         return code
     }
 
-    override fun createException(code: String, message: String): ServiceException {
-        return ServiceException(code, message)
+    companion object {
+
+        val ILLEGAL_PARAM = ApplicationErrorCode("20000", "Illegal Param:%s")
+
+        val SYS_ERROR = ApplicationErrorCode("-1", "Internal Server Error")
     }
 }

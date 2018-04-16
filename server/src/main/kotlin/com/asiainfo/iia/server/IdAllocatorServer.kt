@@ -1,13 +1,13 @@
 package com.asiainfo.iia.server
 
-import com.asiainfo.common.util.FileUtil
-import com.asiainfo.common.util.IoUtil
-import com.asiainfo.common.util.TimerUtil
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
+import cn.hutool.core.io.FileUtil
+import cn.hutool.core.io.IoUtil
+import cn.hutool.log.LogFactory
 import com.asiainfo.iia.server.api.http.IdAllocatorHttpServer
 import com.asiainfo.iia.server.node.OnlineServerNodeManager
 import org.apache.log4j.PropertyConfigurator
+import org.team4u.kit.core.log.LogMessage
+import org.team4u.kit.core.util.TimerUtil
 import java.io.Closeable
 
 /**
@@ -17,7 +17,7 @@ import java.io.Closeable
  */
 object IdAllocatorServer : Closeable {
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     private var httpServer: IdAllocatorHttpServer? = null
 
@@ -30,24 +30,27 @@ object IdAllocatorServer : Closeable {
         })
 
         val logMessage = LogMessage("IdAllocatorServer", "start")
-                .processing()
+            .processing()
 
-        log.info(logMessage)
+        log.info(logMessage.toString())
 
         try {
             start()
 
-            log.info(logMessage
+            log.info(
+                logMessage
                     .append("node", ApplicationContext.config.serverNode)
-                    .success())
+                    .success()
+                    .toString()
+            )
         } catch (e: Throwable) {
-            log.error(logMessage.fail(e.message), e)
+            log.error(logMessage.fail(e.message).toString(), e)
             System.exit(1)
         }
     }
 
     fun start() {
-        PropertyConfigurator.configureAndWatch(FileUtil.findFile("log4j.properties").absolutePath, 1000)
+        PropertyConfigurator.configureAndWatch(FileUtil.file("log4j.properties").absolutePath, 1000)
 
         ApplicationContext.initialize()
 
@@ -55,16 +58,16 @@ object IdAllocatorServer : Closeable {
     }
 
     override fun close() {
-        log.info(LogMessage("IdAllocatorServer", "close").processing())
+        log.info(LogMessage("IdAllocatorServer", "close").processing().toString())
 
-        IoUtil.safeClose(httpServer)
-        TimerUtil.depose()
+        IoUtil.close(httpServer)
+        TimerUtil.close()
 
-        IoUtil.safeClose(ApplicationContext.ioc.get(OnlineServerNodeManager::class.java))
-        IoUtil.safeClose(ApplicationContext.zkClient)
+        IoUtil.close(ApplicationContext.ioc.get(OnlineServerNodeManager::class.java))
+        IoUtil.close(ApplicationContext.zkClient)
 
         ApplicationContext.ioc.depose()
 
-        log.info(LogMessage("IdAllocatorServer", "close").success())
+        log.info(LogMessage("IdAllocatorServer", "close").success().toString())
     }
 }

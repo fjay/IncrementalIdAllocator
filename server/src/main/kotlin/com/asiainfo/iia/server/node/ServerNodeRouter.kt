@@ -1,9 +1,7 @@
 package com.asiainfo.iia.server.node
 
-import com.asiainfo.common.util.EncryptUtil
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
-import com.asiainfo.common.util.policy.ConsistentHashPolicy
+import cn.hutool.crypto.SecureUtil
+import cn.hutool.log.LogFactory
 import com.asiainfo.iia.common.model.ServerNodeRoute
 import com.asiainfo.iia.server.ApplicationContext
 import com.asiainfo.iia.server.id.IdAllocatorManager
@@ -11,8 +9,9 @@ import com.asiainfo.iia.server.model.ServerNode
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener
-import org.nutz.ioc.loader.annotation.Inject
-import org.nutz.ioc.loader.annotation.IocBean
+
+import org.team4u.kit.core.lb.ConsistentHashPolicy
+import org.team4u.kit.core.log.LogMessage
 
 /**
  * @author Jay Wu
@@ -23,15 +22,15 @@ class ServerNodeRouter {
     var serverNodeRoute: ServerNodeRoute = ServerNodeRoute()
         get
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     @Inject
     private lateinit var onlineServerNodeManager: OnlineServerNodeManager
 
     fun init() {
         onlineServerNodeManager.registerAndWatch(
-                ApplicationContext.config.serverNode,
-                OnlinePathChildrenChangedListener()
+            ApplicationContext.config.serverNode,
+            OnlinePathChildrenChangedListener()
         )
         onServerNodeChanged()
     }
@@ -55,30 +54,38 @@ class ServerNodeRouter {
     }
 
     private fun calculateVersion(nodes: List<ServerNode>): String {
-        return EncryptUtil.encryptWithMD5(nodes.map {
+        return SecureUtil.md5(nodes.joinToString(",") {
             it.toString()
-        }.joinToString(","))
+        })
     }
 
     private fun onServerNodeChanged() {
         val oldServerNodeRoute = serverNodeRoute;
 
         serverNodeRoute = buildRoute(
-                onlineServerNodeManager.loadOnlineServerNodes(),
-                ApplicationContext.config.maxSegmentSize,
-                ApplicationContext.config.nodeSessionTimeoutMs
+            onlineServerNodeManager.loadOnlineServerNodes(),
+            ApplicationContext.config.maxSegmentSize,
+            ApplicationContext.config.nodeSessionTimeoutMs
         )
 
         IdAllocatorManager.buildIdAllocators(oldServerNodeRoute, serverNodeRoute)
 
-        log.info(LogMessage("ServerNodeRouter", "onServerNodeChanged")
+        log.info(
+            LogMessage("ServerNodeRouter", "onServerNodeChanged")
                 .append("serverNodeRoute", serverNodeRoute.serverNodeAndKeys.keys)
-                .success())
+                .success()
+                .toString()
+        )
     }
 
     private inner class OnlinePathChildrenChangedListener : PathChildrenCacheListener {
         override fun childEvent(client: CuratorFramework, event: PathChildrenCacheEvent) {
-            log.info(LogMessage("NodeChangedListener", "changed").append("event", event).success())
+            log.info(
+                LogMessage("NodeChangedListener", "changed")
+                    .append("event", event)
+                    .success()
+                    .toString()
+            )
 
             when (event.type) {
                 PathChildrenCacheEvent.Type.CHILD_UPDATED,

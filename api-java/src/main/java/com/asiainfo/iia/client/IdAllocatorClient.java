@@ -1,6 +1,5 @@
 package com.asiainfo.iia.client;
 
-import com.asiainfo.common.util.*;
 import com.asiainfo.common.util.http.HttpRequester;
 import com.asiainfo.common.util.http.Response;
 import com.asiainfo.common.util.log.Log;
@@ -118,6 +117,6 @@ public class IdAllocatorClient implements Closeable {
 
     @Override
     public void close() throws IOException {
-        IoUtil.safeClose(clientConfig);
+        IoUtil.close(clientConfig);
     }
 }

@@ -2,9 +2,10 @@
 
 package com.asiainfo.common.kotlin.extension
 
-import com.asiainfo.common.ServiceException
-import com.asiainfo.common.util.AssertUtil
-import com.asiainfo.common.util.ErrorCode
+import org.team4u.kit.core.error.ErrorCode
+import org.team4u.kit.core.error.ServiceException
+import org.team4u.kit.core.util.AssertUtil
+
 
 fun ErrorCode.isTrue(cnd: Boolean, vararg fmt: Any?) {
     AssertUtil.isTrue(this, cnd, *fmt)
@@ -35,7 +36,8 @@ fun ErrorCode.validate(obj: Any?) {
 }
 
 fun ErrorCode.exception(vararg fmt: Any?): ServiceException {
-    return this.createException(this.code, if (fmt.isNotEmpty()) {
+    return ServiceException(
+        this.code, if (fmt.isNotEmpty()) {
         String.format(this.message, *fmt)
     } else {
         this.message;

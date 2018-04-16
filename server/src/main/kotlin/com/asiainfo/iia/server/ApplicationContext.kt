@@ -1,13 +1,11 @@
 package com.asiainfo.iia.server
 
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
+import cn.hutool.log.LogFactory
 import com.asiainfo.iia.server.config.ServerConfig
 import org.apache.curator.framework.CuratorFramework
 import org.apache.curator.framework.CuratorFrameworkFactory
 import org.apache.curator.retry.ExponentialBackoffRetry
-import org.nutz.ioc.impl.NutIoc
-import org.nutz.ioc.loader.combo.ComboIocLoader
+import org.team4u.kit.core.log.LogMessage
 
 /**
  *
@@ -16,7 +14,7 @@ import org.nutz.ioc.loader.combo.ComboIocLoader
  */
 object ApplicationContext {
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     lateinit var config: ServerConfig
 
@@ -31,41 +29,44 @@ object ApplicationContext {
     }
 
     fun initIoc() {
-        ioc = NutIoc(ComboIocLoader(
+        ioc = NutIoc(
+            ComboIocLoader(
                 "*org.nutz.ioc.loader.json.JsonLoader", "config.js",
                 "*org.nutz.ioc.loader.annotation.AnnotationIocLoader",
-                "com.asiainfo.iia.server"));
+                "com.asiainfo.iia.server"
+            )
+        );
     }
 
     fun initServerConfig() {
         val logMessage = LogMessage("ApplicationContext", "initServerConfig")
-                .processing()
+            .processing()
 
-        log.info(logMessage)
+        log.info(logMessage.toString())
 
         config = ioc.get(ServerConfig::class.java)
 
-        log.info(logMessage.success())
+        log.info(logMessage.success().toString())
     }
 
     fun initZkClient() {
         val logMessage = LogMessage("ApplicationContext", "initZKClient")
-                .append("host", config.zkNode)
-                .processing()
+            .append("host", config.zkNode)
+            .processing()
 
-        log.info(logMessage)
+        log.info(logMessage.toString())
 
         val nodeRefreshIntervalMs = config.nodeSessionTimeoutMs
         zkClient = CuratorFrameworkFactory.builder()
-                .connectString(config.zkNode)
-                .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
-                .sessionTimeoutMs(nodeRefreshIntervalMs)
-                .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
-                .namespace(ApplicationContext.config.namespace)
-                .build()
+            .connectString(config.zkNode)
+            .connectionTimeoutMs(nodeRefreshIntervalMs - 1000)
+            .sessionTimeoutMs(nodeRefreshIntervalMs)
+            .retryPolicy(ExponentialBackoffRetry(nodeRefreshIntervalMs, 10))
+            .namespace(ApplicationContext.config.namespace)
+            .build()
 
         zkClient.start()
 
-        log.info(logMessage.success())
+        log.info(logMessage.success().toString())
     }
 }

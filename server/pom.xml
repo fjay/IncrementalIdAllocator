@@ -14,7 +14,7 @@
     <version>${server.version}</version>
 
     <properties>
-        <kotlin.version>1.1.2-2</kotlin.version>
+        <kotlin.version>1.2.31</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     </properties>
 
@@ -25,9 +25,14 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.asiainfo.common</groupId>
-            <artifactId>asiainfo-util</artifactId>
-            <version>1.1.8</version>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team-kit-core</artifactId>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>com.asiainfo.iia</groupId>
@@ -37,17 +42,22 @@
         <dependency>
             <groupId>org.team4u.fhs</groupId>
             <artifactId>fast-http-server</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.asiainfo.dao</groupId>
+            <groupId>org.team4u.dao</groupId>
             <artifactId>simple-dao</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.team4u.config</groupId>
+            <artifactId>simple-config</artifactId>
             <version>1.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.asiainfo.conf</groupId>
-            <artifactId>conf-center-client</artifactId>
-            <version>1.2.0</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.44</version>
         </dependency>
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
@@ -73,11 +83,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.0.29</version>
-        </dependency>
-        <dependency>
-            <groupId>org.nutz</groupId>
-            <artifactId>nutz</artifactId>
-            <version>1.r.61.r2</version>
         </dependency>
     </dependencies>
 

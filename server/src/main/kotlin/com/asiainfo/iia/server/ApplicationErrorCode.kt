@@ -2,11 +2,6 @@ package com.asiainfo.iia.server
 
 import org.team4u.kit.core.error.ErrorCode
 
-enum class ApplicationErrorCode(private val code: String,
-                                private val message: String) : ErrorCode {
-    ILLEGAL_PARAM("20000", "Illegal Param:%s"),
-    INIT_REMOTE_VALUE_TIMEOUT("30000", "Init remote value timeout"),
-
 class ApplicationErrorCode(
     private val code: String,
     private val message: String
@@ -21,6 +16,8 @@ class ApplicationErrorCode(
     }
 
     companion object {
+
+        val INIT_REMOTE_VALUE_TIMEOUT = ApplicationErrorCode("30000", "Init remote value timeout")
 
         val ILLEGAL_PARAM = ApplicationErrorCode("20000", "Illegal Param:%s")
 

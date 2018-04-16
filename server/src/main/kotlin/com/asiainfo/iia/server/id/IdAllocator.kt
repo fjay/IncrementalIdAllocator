@@ -1,24 +1,25 @@
 package com.asiainfo.iia.server.id
 
+import cn.hutool.log.LogFactory
 import com.asiainfo.common.kotlin.extension.isNotEmpty
-import com.asiainfo.common.util.CodecUtil
-import com.asiainfo.common.util.Registrar
-import com.asiainfo.common.util.WaitingTask
-import com.asiainfo.common.util.log.LogMessage
-import com.asiainfo.common.util.log.Logs
 import com.asiainfo.iia.server.ApplicationErrorCode
 import org.apache.curator.framework.CuratorFramework
 import org.apache.zookeeper.KeeperException
+import org.team4u.kit.core.codec.CodecRegistry
+import org.team4u.kit.core.lang.WaitingTask
+import org.team4u.kit.core.log.LogMessage
 import java.util.concurrent.TimeUnit
 
 /**
  * @author Jay Wu
  */
-class IdAllocator(val segmentKey: Int,
-                  val poolSize: Int,
-                  val client: CuratorFramework) : Registrar.Applicant<Int> {
+class IdAllocator(
+    val segmentKey: Int,
+    val poolSize: Int,
+    val client: CuratorFramework
+) : Registrar.Applicant<Int> {
 
-    private val log = Logs.get()
+    private val log = LogFactory.get()
 
     private val counter by lazy { LongGenerator("/id_segment/$segmentKey", 0) }
 
@@ -33,10 +34,13 @@ class IdAllocator(val segmentKey: Int,
                 currentSeq = nextMaxSeq - poolSize + 1
 
             } catch (e: Exception) {
-                log.error(LogMessage(this.javaClass.simpleName, "alloc")
+                log.error(
+                    LogMessage(this.javaClass.simpleName, "alloc")
                         .fail()
                         .append("nodePath", counter.nodePath)
-                        .append("currentSeq", currentSeq), e)
+                        .append("currentSeq", currentSeq)
+                        .toString(), e
+                )
                 return null
             }
         }
@@ -60,7 +64,7 @@ class IdAllocator(val segmentKey: Int,
             }
 
             currentValue = currentValue!! + step
-            client.setData().forPath(nodePath, CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.encode(currentValue))
+            client.setData().forPath(nodePath, CodecRegistry.LONG_TO_BYTE_ARRAY_CODEC.encode(currentValue))
             return currentValue!!
         }
 
@@ -71,22 +75,27 @@ class IdAllocator(val segmentKey: Int,
                 } catch (e: KeeperException.NoNodeException) {
                     null
                 } catch (e: Exception) {
-                    log.error(LogMessage(this.javaClass.simpleName, "initRemoteValue")
+                    log.error(
+                        LogMessage(this.javaClass.simpleName, "initRemoteValue")
                             .fail()
-                            .append("nodePath", nodePath), e)
+                            .append("nodePath", nodePath)
+                            .toString(), e
+                    )
                     remoteValue.finish(null)
                     return@inBackground
                 }
 
-                remoteValue.finish(if (data == null) {
-                    client.create().creatingParentContainersIfNeeded().forPath(
+                remoteValue.finish(
+                    if (data == null) {
+                        client.create().creatingParentContainersIfNeeded().forPath(
                             nodePath,
-                            CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.encode(initValue)
-                    )
-                    initValue
-                } else {
-                    CodecUtil.LONG_TO_BYTE_ARRAY_CODEC.decode(data)
-                })
+                            CodecRegistry.LONG_TO_BYTE_ARRAY_CODEC.encode(initValue)
+                        )
+                        initValue
+                    } else {
+                        CodecRegistry.LONG_TO_BYTE_ARRAY_CODEC.decode(data)
+                    }
+                )
             }.forPath(nodePath)
         }
     }

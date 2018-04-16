@@ -33,7 +33,7 @@ object ApplicationContext {
             ComboIocLoader(
                 "*org.nutz.ioc.loader.json.JsonLoader", "config.js",
                 "*org.nutz.ioc.loader.annotation.AnnotationIocLoader",
-                "com.asiainfo.iia.server"
+                "org.team4u.iia.server"
             )
         );
     }

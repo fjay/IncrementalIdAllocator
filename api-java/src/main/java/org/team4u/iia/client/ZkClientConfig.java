@@ -1,8 +1,8 @@
 package org.team4u.iia.client;
 
-import com.asiainfo.common.util.CollectionUtil;
-import com.asiainfo.common.util.Function;
 import org.apache.curator.framework.CuratorFramework;
+import org.team4u.common.util.CollectionUtil;
+import org.team4u.common.util.Function;
 
 import java.io.IOException;
 import java.util.List;

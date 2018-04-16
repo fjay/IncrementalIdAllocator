@@ -43,7 +43,9 @@ object IdAllocatorManager : Registrar<Int, IdAllocator>() {
             LogMessage("IdAllocatorManager", "buildIdAllocators")
                 .append("addKeys", addKeys.size)
                 .append("removeKeys", removeKeys.size)
-                .success())
+                .success()
+                .toString()
+        )
     }
 
     fun accept(key: Int): Boolean {

@@ -1,6 +1,6 @@
 var conf = {
     // serverConfig: {
-    //     type: "com.asiainfo.iia.server.config.DbServerConfig",
+    //     type: "org.team4u.iia.server.config.DbServerConfig",
     //     fields: {
     //         // 命名空间
     //         namespace: "IIA",
@@ -33,7 +33,7 @@ var conf = {
     //     }
     // },
     serverConfig: {
-        type: "com.asiainfo.iia.server.config.LocalServerConfig",
+        type: "org.team4u.iia.server.config.LocalServerConfig",
         fields: {
             // 命名空间
             namespace: "IIA",

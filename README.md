@@ -16,7 +16,7 @@ IncrementalIdAllocator为轻量级的分布式增长ID生成器，包含以下�
 
 ```xml
 <dependency>
-    <groupId>com.asiainfo.iia</groupId>
+    <groupId>org.team4u.iia</groupId>
     <artifactId>incremental-id-allocator-client</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -98,7 +98,7 @@ log4j.properties
 ```
 log4j.appender.logfile.File=${log4j.logfile}
 
-log4j.logger.com.asiainfo.iia=${log4j.level}
+log4j.logger.org.team4u.iia=${log4j.level}
 ```
 
 ### 节点配置
